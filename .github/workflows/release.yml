@@ -1,6 +1,8 @@
 name: Release
 
 on:
+  release:
+    types: [published]
   push:
     tags: ["v*"]
 
@@ -14,7 +16,9 @@ jobs:
       - uses: actions/checkout@v5
       - name: Set version from tag
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          tag="${{ github.event.release.tag_name || github.ref_name }}"
+          echo "TAG=$tag" >> "$GITHUB_ENV"
+          version="${tag#v}"
           jq --arg v "$version" '.version = $v' custom_components/kwb_comfort4/manifest.json > m.json
           mv m.json custom_components/kwb_comfort4/manifest.json
       - name: Zip integration
@@ -22,5 +26,6 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: kwb_comfort4.zip
-          name: ${{ github.ref_name }}
+          tag_name: ${{ env.TAG }}
+          name: ${{ env.TAG }}
           generate_release_notes: true
