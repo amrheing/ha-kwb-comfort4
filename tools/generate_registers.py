@@ -133,6 +133,7 @@ DEFAULT_ENABLED = {
     "SOL.i_ist_temperatur_speicher_1.value",
     "SOL.o_pumpe_1",
     "SOL.pumpe_1_steuerstufe",
+    "SOL.pumpe_2_steuerstufe",
     "SOL.waermeleistung",
     "SOL.waermemenge_tag",
     "SOL.waermemenge_gesamt",
