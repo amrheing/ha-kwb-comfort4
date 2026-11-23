@@ -67,6 +67,94 @@ Einstellungen » Geräte & Dienste » Integration hinzufügen » „KWB Comfort 
 Später änderbar über „Konfigurieren“: Module, Ebene, Abfrageintervall, Pause
 zwischen Anfragen, Lifetick. Die IP-Adresse ändert man über „Neu konfigurieren“.
 
+## Pellets: Verbrauch, Preis und Käufe
+
+Bei Kesseln mit Brennstoffzähler (Easyfire, Multifire, Pelletfire Plus, Combifire)
+legt die Integration zusätzlich an:
+
+- **Brennstoffverbrauch** heute, gestern, Monat, Vormonat, Jahr, Vorjahr (kg),
+  berechnet aus dem Zähler der Regelung und über Neustarts gespeichert
+- **Pelletpreis** (€/t) als Eingabefeld. Jede Änderung wird mit Datum gemerkt.
+- **Brennstoffkosten** heute, Monat, Jahr, Vorjahr (Verbrauch × aktueller Preis)
+- **Pelletkäufe**: Anzahl als Zustand, alle Käufe als Attribut `purchases`
+- **Preisverlauf** als Langzeitstatistik `kwb_comfort4:pellet_price_…` (die genaue
+  ID steht im Attribut `price_statistic_id` des Sensors Pelletkäufe). Sie enthält
+  jeden Kauf und jede Preisänderung, auch rückwirkend eingetragene.
+
+### Käufe eintragen, auch rückwirkend
+
+Aktion `kwb_comfort4.add_purchase` (Entwicklerwerkzeuge » Aktionen oder in einem Skript):
+
+```yaml
+action: kwb_comfort4.add_purchase
+data:
+  date: "2024-06-15"
+  amount_kg: 6000
+  price_per_t: 349.50   # oder total_price: 2097
+  note: Lieferant XY
+  add_to_stock: false   # true zählt die Menge zur Restmenge in der Regelung dazu
+```
+
+Dazu gibt es `kwb_comfort4.delete_purchase` (Datum) und `kwb_comfort4.list_purchases`
+(liefert Käufe und Preisverlauf zurück).
+
+Skript als Eingabemaske fürs Dashboard (in der Skript-Ansicht erscheinen die
+Felder als Formular):
+
+```yaml
+alias: Pelletkauf eintragen
+fields:
+  datum: {name: Datum, required: true, selector: {date: {}}}
+  menge: {name: Menge (kg), required: true, selector: {number: {min: 1, max: 100000, mode: box, unit_of_measurement: kg}}}
+  preis: {name: Preis pro Tonne, required: true, selector: {number: {min: 0, max: 2000, step: 0.01, mode: box, unit_of_measurement: €/t}}}
+  auf_restmenge: {name: Auf Restmenge buchen, default: false, selector: {boolean: {}}}
+sequence:
+  - action: kwb_comfort4.add_purchase
+    data:
+      date: "{{ datum }}"
+      amount_kg: "{{ menge }}"
+      price_per_t: "{{ preis }}"
+      add_to_stock: "{{ auf_restmenge }}"
+```
+
+### Beispielkarte
+
+Entitäts-IDs an die eigene Installation anpassen:
+
+```yaml
+type: vertical-stack
+cards:
+  - type: entities
+    title: Pellets
+    entities:
+      - entity: number.kwb_easyfire_restmenge_brennstofflager
+      - entity: number.kwb_easyfire_pelletpreis
+      - type: section
+      - entity: sensor.kwb_easyfire_brennstoffverbrauch_heute
+      - entity: sensor.kwb_easyfire_brennstoffverbrauch_gestern
+      - entity: sensor.kwb_easyfire_brennstoffverbrauch_monat
+      - entity: sensor.kwb_easyfire_brennstoffverbrauch_vormonat
+      - entity: sensor.kwb_easyfire_brennstoffverbrauch_jahr
+      - entity: sensor.kwb_easyfire_brennstoffkosten_monat
+      - entity: sensor.kwb_easyfire_brennstoffkosten_jahr
+  - type: statistics-graph
+    title: Pelletpreis
+    chart_type: line
+    period: month
+    days_to_show: 1825
+    stat_types: [mean]
+    entities:
+      - kwb_comfort4:pellet_price_192_168_1_50_1
+  - type: markdown
+    title: Käufe
+    content: >
+      | Datum | Menge | €/t | Summe |
+      |---|---:|---:|---:|
+      {% for p in state_attr('sensor.kwb_easyfire_pelletkaufe', 'purchases') | reverse %}
+      | {{ p.date }} | {{ p.amount_kg }} kg | {{ p.price_per_t }} | {{ p.total }} € |
+      {% endfor %}
+```
+
 ## Umstieg von der Modbus-YAML-Konfiguration
 
 Damit Verlauf und Statistiken erhalten bleiben:

@@ -513,7 +513,11 @@ def main(en_path: str, de_path: str) -> None:
     ):
         path = COMPONENT / fname
         data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-        data["entity"] = entity_section(lang)
+        generated = entity_section(lang)
+        for plat, ents in data.get("entity", {}).items():
+            for key, val in ents.items():
+                generated.setdefault(plat, {}).setdefault(key, val)
+        data["entity"] = {p: dict(sorted(v.items())) for p, v in sorted(generated.items())}
         data["device"] = {k: {"name": v} for k, v in device_names[code].items()}
         path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 

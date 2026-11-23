@@ -294,6 +294,9 @@
       "mf2_kesseltempsoll2": {
         "name": "Setpoint temperature 2"
       },
+      "pellet_price": {
+        "name": "Pellet price"
+      },
       "puf_brauchwassertemp_min": {
         "name": "DHW temp. min."
       },
@@ -632,6 +635,36 @@
       "fs_pelletsverbrauch": {
         "name": "Fuel consumption"
       },
+      "fuel_consumption_last_month": {
+        "name": "Fuel consumption last month"
+      },
+      "fuel_consumption_last_year": {
+        "name": "Fuel consumption last year"
+      },
+      "fuel_consumption_month": {
+        "name": "Fuel consumption this month"
+      },
+      "fuel_consumption_today": {
+        "name": "Fuel consumption today"
+      },
+      "fuel_consumption_year": {
+        "name": "Fuel consumption this year"
+      },
+      "fuel_consumption_yesterday": {
+        "name": "Fuel consumption yesterday"
+      },
+      "fuel_cost_last_year": {
+        "name": "Fuel cost last year"
+      },
+      "fuel_cost_month": {
+        "name": "Fuel cost this month"
+      },
+      "fuel_cost_today": {
+        "name": "Fuel cost today"
+      },
+      "fuel_cost_year": {
+        "name": "Fuel cost this year"
+      },
       "hk_i_aussen_temperatur": {
         "name": "Actual outside temperature"
       },
@@ -906,6 +939,9 @@
       "mf2_zwischenbehaelter_fuellstand_prz": {
         "name": "Hopper fill level"
       },
+      "pellet_purchases": {
+        "name": "Pellet purchases"
+      },
       "puf_brauchwassertemp_min": {
         "name": "DHW temp. min."
       },
@@ -1051,12 +1087,6 @@
       },
       "zk_i_temperatur": {
         "name": "Temperature"
-      },
-      "fuel_consumption_today": {
-        "name": "Fuel consumption today"
-      },
-      "fuel_consumption_yesterday": {
-        "name": "Fuel consumption yesterday"
       }
     },
     "switch": {
@@ -1101,6 +1131,80 @@
     },
     "heat_meter": {
       "name": "Heat meter {index}"
+    }
+  },
+  "services": {
+    "add_purchase": {
+      "name": "Add pellet purchase",
+      "description": "Records a pellet delivery with amount and price (also for past purchases). The price becomes part of the price history.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Controller",
+          "description": "Only needed with more than one KWB controller."
+        },
+        "date": {
+          "name": "Date",
+          "description": "Delivery date."
+        },
+        "amount_kg": {
+          "name": "Amount",
+          "description": "Delivered amount in kg."
+        },
+        "price_per_t": {
+          "name": "Price per tonne",
+          "description": "Price per tonne. Alternatively give the total price."
+        },
+        "total_price": {
+          "name": "Total price",
+          "description": "Total price of the delivery, used when no price per tonne is given."
+        },
+        "note": {
+          "name": "Note",
+          "description": "For example the supplier."
+        },
+        "add_to_stock": {
+          "name": "Add to residual fuel",
+          "description": "Adds the amount to the residual fuel amount in the boiler controller."
+        }
+      }
+    },
+    "delete_purchase": {
+      "name": "Delete pellet purchase",
+      "description": "Deletes the purchases of a date.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Controller",
+          "description": "Only needed with more than one KWB controller."
+        },
+        "date": {
+          "name": "Date",
+          "description": "Date of the purchase to delete."
+        }
+      }
+    },
+    "list_purchases": {
+      "name": "List pellet purchases",
+      "description": "Returns all purchases and the price history.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Controller",
+          "description": "Only needed with more than one KWB controller."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "select_entry": {
+      "message": "Select the KWB controller (config entry)."
+    },
+    "no_fuel": {
+      "message": "This boiler type has no fuel consumption counter."
+    },
+    "price_missing": {
+      "message": "Give a price per tonne or a total price."
+    },
+    "stock_unknown": {
+      "message": "The residual fuel amount is not known yet."
     }
   }
 }

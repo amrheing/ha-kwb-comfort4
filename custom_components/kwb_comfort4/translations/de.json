@@ -294,6 +294,9 @@
       "mf2_kesseltempsoll2": {
         "name": "Solltemperatur 2"
       },
+      "pellet_price": {
+        "name": "Pelletpreis"
+      },
       "puf_brauchwassertemp_min": {
         "name": "Brauchwassertemp. min."
       },
@@ -632,6 +635,36 @@
       "fs_pelletsverbrauch": {
         "name": "Brennstoffverbrauch"
       },
+      "fuel_consumption_last_month": {
+        "name": "Brennstoffverbrauch Vormonat"
+      },
+      "fuel_consumption_last_year": {
+        "name": "Brennstoffverbrauch Vorjahr"
+      },
+      "fuel_consumption_month": {
+        "name": "Brennstoffverbrauch Monat"
+      },
+      "fuel_consumption_today": {
+        "name": "Brennstoffverbrauch heute"
+      },
+      "fuel_consumption_year": {
+        "name": "Brennstoffverbrauch Jahr"
+      },
+      "fuel_consumption_yesterday": {
+        "name": "Brennstoffverbrauch gestern"
+      },
+      "fuel_cost_last_year": {
+        "name": "Brennstoffkosten Vorjahr"
+      },
+      "fuel_cost_month": {
+        "name": "Brennstoffkosten Monat"
+      },
+      "fuel_cost_today": {
+        "name": "Brennstoffkosten heute"
+      },
+      "fuel_cost_year": {
+        "name": "Brennstoffkosten Jahr"
+      },
       "hk_i_aussen_temperatur": {
         "name": "Außentemperatur"
       },
@@ -906,6 +939,9 @@
       "mf2_zwischenbehaelter_fuellstand_prz": {
         "name": "Zwischenbehälter Füllstand"
       },
+      "pellet_purchases": {
+        "name": "Pelletkäufe"
+      },
       "puf_brauchwassertemp_min": {
         "name": "Brauchwassertemp. min."
       },
@@ -1051,12 +1087,6 @@
       },
       "zk_i_temperatur": {
         "name": "Temperatur"
-      },
-      "fuel_consumption_today": {
-        "name": "Brennstoffverbrauch heute"
-      },
-      "fuel_consumption_yesterday": {
-        "name": "Brennstoffverbrauch gestern"
       }
     },
     "switch": {
@@ -1101,6 +1131,80 @@
     },
     "heat_meter": {
       "name": "Wärmemengenzähler {index}"
+    }
+  },
+  "services": {
+    "add_purchase": {
+      "name": "Pelletkauf eintragen",
+      "description": "Trägt eine Pelletlieferung mit Menge und Preis ein, auch rückwirkend. Der Preis fließt in den Preisverlauf ein.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Regelung",
+          "description": "Nur nötig bei mehreren KWB-Regelungen."
+        },
+        "date": {
+          "name": "Datum",
+          "description": "Lieferdatum."
+        },
+        "amount_kg": {
+          "name": "Menge",
+          "description": "Gelieferte Menge in kg."
+        },
+        "price_per_t": {
+          "name": "Preis pro Tonne",
+          "description": "Preis pro Tonne. Alternativ den Gesamtpreis angeben."
+        },
+        "total_price": {
+          "name": "Gesamtpreis",
+          "description": "Gesamtpreis der Lieferung, wird verwendet, wenn kein Tonnenpreis angegeben ist."
+        },
+        "note": {
+          "name": "Notiz",
+          "description": "Zum Beispiel der Lieferant."
+        },
+        "add_to_stock": {
+          "name": "Auf Restmenge buchen",
+          "description": "Zählt die Menge zur Restmenge Brennstofflager in der Regelung dazu."
+        }
+      }
+    },
+    "delete_purchase": {
+      "name": "Pelletkauf löschen",
+      "description": "Löscht die Käufe eines Datums.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Regelung",
+          "description": "Nur nötig bei mehreren KWB-Regelungen."
+        },
+        "date": {
+          "name": "Datum",
+          "description": "Datum des zu löschenden Kaufs."
+        }
+      }
+    },
+    "list_purchases": {
+      "name": "Pelletkäufe anzeigen",
+      "description": "Gibt alle Käufe und den Preisverlauf zurück.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Regelung",
+          "description": "Nur nötig bei mehreren KWB-Regelungen."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "select_entry": {
+      "message": "Bitte die KWB-Regelung auswählen."
+    },
+    "no_fuel": {
+      "message": "Dieser Kesseltyp hat keinen Brennstoffzähler."
+    },
+    "price_missing": {
+      "message": "Bitte Preis pro Tonne oder Gesamtpreis angeben."
+    },
+    "stock_unknown": {
+      "message": "Die Restmenge ist noch nicht bekannt."
     }
   }
 }

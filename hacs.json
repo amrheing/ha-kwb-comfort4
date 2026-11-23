@@ -1,6 +1,6 @@
 {
   "name": "KWB Comfort 4 (Modbus TCP)",
-  "homeassistant": "2025.2.0",
+  "homeassistant": "2025.10.0",
   "render_readme": true,
   "country": [
     "DE",

@@ -152,8 +152,8 @@ async def test_connection_lost(hass, kwb):
     assert hass.states.get(_eid(hass, "sensor", 8260)).state == STATE_UNAVAILABLE
 
 
-async def test_fuel_today_yesterday(hass, kwb):
-    from datetime import timedelta
+async def test_fuel_periods_price_purchases(hass, kwb):
+    from datetime import date, timedelta
 
     from homeassistant.util import dt as dt_util
 
@@ -162,19 +162,57 @@ async def test_fuel_today_yesterday(hass, kwb):
     assert await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
     today_id = "sensor.kwb_easyfire_fuel_consumption_today"
-    yesterday_id = "sensor.kwb_easyfire_fuel_consumption_yesterday"
     assert hass.states.get(today_id).state == "0"
     coordinator = entry.runtime_data.coordinator
+    book = entry.runtime_data.fuel
     kwb.set(8233, 28250)
     await coordinator.async_refresh()
     await hass.async_block_till_done()
     assert hass.states.get(today_id).state == "30"
+    assert hass.states.get("sensor.kwb_easyfire_fuel_consumption_this_month").state == "30"
+
     # pretend the day started yesterday -> next update rolls over
-    for ent in hass.data["entity_components"]["sensor"].entities:
-        if getattr(ent, "period", None):
-            ent._day = dt_util.now().date() - timedelta(days=1)
+    yesterday = dt_util.now().date() - timedelta(days=1)
+    book.data["periods"]["day"]["key"] = yesterday.isoformat()
     kwb.set(8233, 28262)
     await coordinator.async_refresh()
     await hass.async_block_till_done()
-    assert hass.states.get(yesterday_id).state == "42"
+    assert hass.states.get("sensor.kwb_easyfire_fuel_consumption_yesterday").state == "42"
     assert hass.states.get(today_id).state == "0"
+
+    # price as input field, cost follows
+    await hass.services.async_call(
+        "number", "set_value", {"entity_id": "number.kwb_easyfire_pellet_price", "value": 425}, blocking=True
+    )
+    assert hass.states.get("number.kwb_easyfire_pellet_price").state == "425.0"
+    assert float(hass.states.get("sensor.kwb_easyfire_fuel_cost_this_month").state) == round(42 * 0.425, 2)
+
+    # past purchase by total price, plus a current one added to the stock
+    await hass.services.async_call(
+        "kwb_comfort4", "add_purchase",
+        {"date": "2024-06-15", "amount_kg": 6000, "total_price": 2100},
+        blocking=True,
+    )
+    resp = await hass.services.async_call(
+        "kwb_comfort4", "add_purchase",
+        {"date": dt_util.now().date().isoformat(), "amount_kg": 5000, "price_per_t": 398.5, "add_to_stock": True},
+        blocking=True, return_response=True,
+    )
+    assert resp["purchase"]["total"] == 1992.5
+    assert kwb.holding[24928] == 4061 + 5000  # high word first: low word is second
+    state = hass.states.get("sensor.kwb_easyfire_pellet_purchases")
+    assert state.state == "2"
+    assert state.attributes["purchases"][0] == {
+        "date": "2024-06-15", "amount_kg": 6000, "price_per_t": 350.0, "total": 2100.0
+    }
+    assert hass.states.get("number.kwb_easyfire_pellet_price").state == "398.5"
+    listing = await hass.services.async_call(
+        "kwb_comfort4", "list_purchases", {}, blocking=True, return_response=True
+    )
+    assert [p["date"] for p in listing["price_history"]][0] == "2024-06-15"
+    removed = await hass.services.async_call(
+        "kwb_comfort4", "delete_purchase", {"date": date(2024, 6, 15).isoformat()},
+        blocking=True, return_response=True,
+    )
+    assert removed == {"removed": 1}
+

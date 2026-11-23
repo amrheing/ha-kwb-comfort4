@@ -8,9 +8,13 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import config_validation as cv, entity_registry as er
+from homeassistant.helpers.typing import ConfigType
 
+from .const import CONF_BOILER_TYPE, DEFAULT_BOILER_TYPE, DOMAIN
 from .coordinator import KwbCoordinator
+from .fuel import REG_FUEL_CONSUMPTION, FuelBook, statistic_id_for
+from .services import async_setup_services
 from .entity import EntitySpec, build_specs, unique_id_for
 from .registers import load_register_map
 
@@ -30,9 +34,17 @@ PLATFORMS = [
 class KwbRuntimeData:
     coordinator: KwbCoordinator
     specs: list[EntitySpec]
+    fuel: FuelBook | None = None
 
 
 type KwbConfigEntry = ConfigEntry[KwbRuntimeData]
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    async_setup_services(hass)
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: KwbConfigEntry) -> bool:
@@ -45,11 +57,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: KwbConfigEntry) -> bool:
     registry = er.async_get(hass)
     expected = {(s.platform.value, unique_id_for(entry, s.reg)) for s in specs}
     base = entry.unique_id or entry.entry_id
-    keep_suffix = ("_active_alarms", "_software_version")
+    keep_suffix = (
+        "_active_alarms",
+        "_software_version",
+        "_pellet_price",
+        "_pellet_purchases",
+    )
     enabled: set[int] = set()
     by_uid = {unique_id_for(entry, s.reg): s for s in specs}
     for reg_entry in er.async_entries_for_config_entry(registry, entry.entry_id):
-        if reg_entry.unique_id.startswith(base) and reg_entry.unique_id.endswith(keep_suffix):
+        if reg_entry.unique_id.startswith(base) and (
+            reg_entry.unique_id.endswith(keep_suffix)
+            or "_fuel_consumption_" in reg_entry.unique_id
+            or "_fuel_cost_" in reg_entry.unique_id
+        ):
             continue
         if (reg_entry.domain, reg_entry.unique_id) not in expected:
             _LOGGER.debug("Removing stale entity %s", reg_entry.entity_id)
@@ -74,9 +95,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: KwbConfigEntry) -> bool:
             preload.append(reg.status)
     coordinator.register(preload)
 
+    fuel: FuelBook | None = None
+    boiler = entry.options.get(CONF_BOILER_TYPE, DEFAULT_BOILER_TYPE)
+    if REG_FUEL_CONSUMPTION in regmap.boiler_types[boiler]["registers"]:
+        fuel = FuelBook(hass, entry.entry_id, statistic_id_for(base))
+        await fuel.async_load()
+        coordinator.register([REG_FUEL_CONSUMPTION])  # kept for the whole entry lifetime
+
+        def _feed() -> None:
+            if coordinator.data is not None:
+                fuel.update_total(coordinator.data.values.get(REG_FUEL_CONSUMPTION))
+
+        entry.async_on_unload(coordinator.async_add_listener(_feed))
+
     await coordinator.async_read_software_version()
     await coordinator.async_config_entry_first_refresh()
-    entry.runtime_data = KwbRuntimeData(coordinator, specs)
+    if fuel is not None:
+        fuel.update_total(coordinator.data.values.get(REG_FUEL_CONSUMPTION))
+        fuel.async_update_statistics()
+    entry.runtime_data = KwbRuntimeData(coordinator, specs, fuel)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     # pre-registration is only for the first refresh; entities hold their own
