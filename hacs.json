@@ -2,8 +2,6 @@
   "name": "KWB Comfort 4 (Modbus TCP)",
   "homeassistant": "2025.2.0",
   "render_readme": true,
-  "zip_release": true,
-  "filename": "kwb_comfort4.zip",
   "country": [
     "DE",
     "AT",
