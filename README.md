@@ -82,8 +82,10 @@ Damit Verlauf und Statistiken erhalten bleiben:
 - Die Registerliste wird aus den KWB-Dateien `ModbusInfo-de/en-Vxx.xlsx`
   erzeugt (`tools/generate_registers.py`). Die Dateien selbst liegen nicht im
   Repository. Sie sind auf der SD-Karte der Regelung oder bei KWB erhältlich.
-- 32-Bit-Werte überträgt KWB mit dem niederwertigen Wort zuerst. Das ist
-  berücksichtigt.
+- 32-Bit-Werte (z. B. Brennstoffverbrauch) kommen bei aktuellen Regelungen
+  (Software 24.x) mit dem höherwertigen Wort zuerst, anders als im
+  KWB-Handbuch beschrieben. Falls Zähler riesige Werte zeigen: Konfigurieren »
+  Wortreihenfolge umstellen.
 - Ob die Regelung die Adressen 1-basiert erwartet, erkennt die Integration
   beim Einrichten selbst.
 

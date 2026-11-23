@@ -53,10 +53,15 @@ class Register:
             return False
         return self.expert_write if access_level == ACCESS_EXPERT else self.user_write
 
-    def decode(self, words: list[int]) -> int:
-        """Decode raw words. 32 bit values come low word first (KWB)."""
+    def decode(self, words: list[int], word_order: str = "big") -> int:
+        """Decode raw words.
+
+        The KWB manual says 32 bit values come low word first, but controllers
+        with software 24.x send the high word first, so this is configurable.
+        """
         if self.count == 2:
-            value = words[0] | (words[1] << 16)
+            low, high = (words[1], words[0]) if word_order == "big" else (words[0], words[1])
+            value = low | (high << 16)
             if self.signed and value & 0x80000000:
                 value -= 1 << 32
             return value
@@ -67,10 +72,11 @@ class Register:
             value -= 1 << 16
         return value
 
-    def encode(self, value: int) -> list[int]:
+    def encode(self, value: int, word_order: str = "big") -> list[int]:
         if self.count == 2:
             value &= 0xFFFFFFFF
-            return [value & 0xFFFF, value >> 16]
+            low, high = value & 0xFFFF, value >> 16
+            return [high, low] if word_order == "big" else [low, high]
         return [value & 0xFFFF]
 
 

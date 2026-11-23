@@ -80,11 +80,13 @@
         "data": {
           "scan_interval": "Abfrageintervall",
           "request_delay": "Pause zwischen Anfragen",
-          "lifetick": "Externe Vorgabe über Modbus (Lifetick senden)"
+          "lifetick": "Externe Vorgabe über Modbus (Lifetick senden)",
+          "word_order": "Wortreihenfolge 32-Bit-Werte"
         },
         "data_description": {
           "request_delay": "KWB empfiehlt 0,5 bis 1 s.",
-          "lifetick": "Nur einschalten, wenn Home Assistant Kesselleistung oder Temperatur vorgeben soll (Expertenebene, „Leistungs-/Temperaturvorgabe“ an der Regelung aktiv). Dann werden auch die Modbus-Vorgabewerte als Entitäten angelegt."
+          "lifetick": "Nur einschalten, wenn Home Assistant Kesselleistung oder Temperatur vorgeben soll (Expertenebene, „Leistungs-/Temperaturvorgabe“ an der Regelung aktiv). Dann werden auch die Modbus-Vorgabewerte als Entitäten angelegt.",
+          "word_order": "Wenn Zähler wie Brennstoffverbrauch riesige Werte zeigen, die andere Reihenfolge wählen."
         }
       }
     }
@@ -106,6 +108,12 @@
       "options": {
         "user": "Benutzer",
         "expert": "Experte"
+      }
+    },
+    "word_order": {
+      "options": {
+        "big": "Höherwertiges Wort zuerst (Standard)",
+        "little": "Niederwertiges Wort zuerst (laut KWB-Handbuch)"
       }
     }
   },

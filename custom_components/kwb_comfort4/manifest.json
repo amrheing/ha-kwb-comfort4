@@ -9,5 +9,5 @@
   "issue_tracker": "https://github.com/amrheing/ha-kwb-comfort4/issues",
   "loggers": ["custom_components.kwb_comfort4"],
   "requirements": [],
-  "version": "0.1.0"
+  "version": "0.1.1"
 }

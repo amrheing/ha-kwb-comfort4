@@ -37,11 +37,13 @@ from .const import (
     CONF_MODULES,
     CONF_REQUEST_DELAY,
     CONF_UNIT_ID,
+    CONF_WORD_ORDER,
     DEFAULT_BOILER_TYPE,
     DEFAULT_PORT,
     DEFAULT_REQUEST_DELAY,
     DEFAULT_SCAN_INTERVAL,
     DEFAULT_UNIT_ID,
+    DEFAULT_WORD_ORDER,
     DOMAIN,
     MODULES,
 )
@@ -117,6 +119,15 @@ def _advanced_schema(defaults: dict[str, Any]) -> vol.Schema:
             ): NumberSelector(
                 NumberSelectorConfig(
                     min=0, max=2, step=0.1, unit_of_measurement="s", mode=NumberSelectorMode.BOX
+                )
+            ),
+            vol.Required(
+                CONF_WORD_ORDER, default=defaults.get(CONF_WORD_ORDER, DEFAULT_WORD_ORDER)
+            ): SelectSelector(
+                SelectSelectorConfig(
+                    options=["big", "little"],
+                    translation_key=CONF_WORD_ORDER,
+                    mode=SelectSelectorMode.LIST,
                 )
             ),
             vol.Required(CONF_LIFETICK, default=defaults.get(CONF_LIFETICK, False)): BooleanSelector(),
@@ -257,6 +268,7 @@ class KwbOptionsFlow(OptionsFlow):
                     CONF_SCAN_INTERVAL: int(user_input[CONF_SCAN_INTERVAL]),
                     CONF_REQUEST_DELAY: float(user_input[CONF_REQUEST_DELAY]),
                     CONF_LIFETICK: bool(user_input[CONF_LIFETICK]),
+                    CONF_WORD_ORDER: user_input[CONF_WORD_ORDER],
                 }
             )
             return self.async_create_entry(data=self._options)

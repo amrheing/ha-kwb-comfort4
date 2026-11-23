@@ -12,6 +12,7 @@ CONF_ACCESS_LEVEL = "access_level"
 CONF_MODULES = "modules"
 CONF_REQUEST_DELAY = "request_delay"
 CONF_LIFETICK = "lifetick"
+CONF_WORD_ORDER = "word_order"
 
 ACCESS_USER = "user"
 ACCESS_EXPERT = "expert"
@@ -21,6 +22,9 @@ DEFAULT_UNIT_ID = 1
 DEFAULT_SCAN_INTERVAL = 30  # seconds; controller drops idle connections after 60 s
 DEFAULT_REQUEST_DELAY = 0.5  # seconds between requests (KWB recommends 0.5 to 1 s)
 DEFAULT_BOILER_TYPE = "easyfire"
+# High word first. The manual says low word first, real controllers (SW 24.x)
+# send high word first.
+DEFAULT_WORD_ORDER = "big"
 
 MODULE_HEATING_CIRCUIT = "heating_circuit"
 MODULE_BUFFER = "buffer"

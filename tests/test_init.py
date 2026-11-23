@@ -53,8 +53,9 @@ async def test_setup_and_states(hass, kwb):
     assert hass.states.get(_eid(hass, "sensor", 8208)).state == "ignite_start_suction"
     assert hass.states.get(_eid(hass, "sensor", 8201)).state == "46.0"
     assert hass.states.get(_eid(hass, "sensor", 9275)).state == "71266.0"
+    assert hass.states.get(_eid(hass, "sensor", 8233)).state == "28220"
     # writable at user level -> number / select / switch
-    assert hass.states.get(_eid(hass, "number", 24927)).state == "4061"
+    assert hass.states.get(_eid(hass, "number", 24927)).state == "4050"  # 50 kg steps
     assert hass.states.get(_eid(hass, "number", 24624)).state == "24.0"
     assert hass.states.get(_eid(hass, "select", 24589)).state == "comfort"
     assert hass.states.get(_eid(hass, "switch", 24576)).state == "on"
@@ -83,7 +84,7 @@ async def test_writes(hass, kwb):
     await hass.services.async_call(
         "number", "set_value", {"entity_id": _eid(hass, "number", 24927), "value": 70000}, blocking=True
     )
-    assert (kwb.holding[24927], kwb.holding[24928]) == (70000 & 0xFFFF, 1)
+    assert (kwb.holding[24927], kwb.holding[24928]) == (1, 70000 & 0xFFFF)
     await hass.services.async_call(
         "select", "select_option", {"entity_id": _eid(hass, "select", 24589), "option": "reduct"}, blocking=True
     )

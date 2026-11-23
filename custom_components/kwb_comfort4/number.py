@@ -17,7 +17,11 @@ UNITS = {
     "kg": (UnitOfMass.KILOGRAMS, NumberDeviceClass.WEIGHT, 0, 100000),
 }
 # nicer steps for room temperatures
-STEPS = {"hk_raum_temperatur_soll_tag": 0.5, "hk_raum_temperatur_soll_nacht": 0.5}
+STEPS = {
+    "hk_raum_temperatur_soll_tag": 0.5,
+    "hk_raum_temperatur_soll_nacht": 0.5,
+    "ksm_restmenge_brennstofflager": 50,
+}
 
 
 async def async_setup_entry(
@@ -50,7 +54,12 @@ class KwbNumber(KwbEntity, NumberEntity):
 
     @property
     def native_value(self) -> float | None:
-        return self.scaled
+        value = self.scaled
+        step = STEPS.get(self.reg.key)
+        if value is not None and step and step >= 1:
+            # show in the same granularity as it can be set
+            return int(round(value / step) * step)
+        return value
 
     async def async_set_native_value(self, value: float) -> None:
         raw = round(value / self.reg.scale)

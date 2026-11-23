@@ -21,6 +21,8 @@ from .const import (
     CONF_LIFETICK,
     CONF_REQUEST_DELAY,
     CONF_UNIT_ID,
+    CONF_WORD_ORDER,
+    DEFAULT_WORD_ORDER,
     DEFAULT_REQUEST_DELAY,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
@@ -157,6 +159,7 @@ class KwbCoordinator(DataUpdateCoordinator[KwbData]):
         self.request_delay: float = entry.options.get(
             CONF_REQUEST_DELAY, DEFAULT_REQUEST_DELAY
         )
+        self.word_order: str = entry.options.get(CONF_WORD_ORDER, DEFAULT_WORD_ORDER)
         self.lifetick_enabled: bool = entry.options.get(CONF_LIFETICK, False)
         self._lifetick = 0
         self._wanted: dict[int, int] = {}  # address -> number of entities using it
@@ -232,7 +235,7 @@ class KwbCoordinator(DataUpdateCoordinator[KwbData]):
                 continue
             if offset + reg.count > block.count:
                 continue
-            values[addr] = reg.decode(words[offset : offset + reg.count])
+            values[addr] = reg.decode(words[offset : offset + reg.count], self.word_order)
 
     async def _read_alarms(self) -> list[int]:
         addrs = [a[0] for a in self.regmap.alarms]
@@ -328,7 +331,7 @@ class KwbCoordinator(DataUpdateCoordinator[KwbData]):
         """Write a register and update the cached value."""
         try:
             await self._pace()
-            await self.client.write_registers(reg.address, reg.encode(raw))
+            await self.client.write_registers(reg.address, reg.encode(raw, self.word_order))
         except ModbusError as err:
             raise HomeAssistantError(
                 f"Writing {reg.param} ({reg.address}) failed: {err}"

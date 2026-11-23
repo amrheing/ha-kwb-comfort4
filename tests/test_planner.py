@@ -4,11 +4,14 @@ from custom_components.kwb_comfort4.coordinator import Block, plan_blocks, split
 from custom_components.kwb_comfort4.registers import load_register_map
 
 
-def test_decode_32bit_little_word_order():
+def test_decode_32bit_word_order():
     regmap = load_register_map()
     reg = regmap.registers[24927]  # residual fuel, u32
-    assert reg.encode(70000) == [70000 & 0xFFFF, 1]
-    assert reg.decode([70000 & 0xFFFF, 1]) == 70000
+    # real controllers (SW 24.7) send the high word first
+    assert reg.encode(70000) == [1, 70000 & 0xFFFF]
+    assert reg.decode([0, 4059]) == 4059
+    assert reg.decode([70000 & 0xFFFF, 1], "little") == 70000
+    assert reg.encode(70000, "little") == [70000 & 0xFFFF, 1]
     signed = regmap.registers[8197]
     assert signed.decode([0xFFF6]) == -10
 

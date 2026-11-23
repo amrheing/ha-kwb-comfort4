@@ -80,11 +80,13 @@
         "data": {
           "scan_interval": "Scan interval",
           "request_delay": "Delay between requests",
-          "lifetick": "External specification via Modbus (send lifetick)"
+          "lifetick": "External specification via Modbus (send lifetick)",
+          "word_order": "Word order of 32 bit values"
         },
         "data_description": {
           "request_delay": "KWB recommends 0.5 to 1 s.",
-          "lifetick": "Only enable if Home Assistant should specify boiler output or temperature (expert level, “Output/temperature specification” enabled on the controller). This also adds the Modbus specification entities."
+          "lifetick": "Only enable if Home Assistant should specify boiler output or temperature (expert level, “Output/temperature specification” enabled on the controller). This also adds the Modbus specification entities.",
+          "word_order": "If counters like fuel consumption show huge values, choose the other order."
         }
       }
     }
@@ -106,6 +108,12 @@
       "options": {
         "user": "User",
         "expert": "Expert"
+      }
+    },
+    "word_order": {
+      "options": {
+        "big": "High word first (default)",
+        "little": "Low word first (as in the KWB manual)"
       }
     }
   },
