@@ -24,14 +24,21 @@ from homeassistant.const import (
     UnitOfVolume,
     UnitOfVolumeFlowRate,
 )
-from homeassistant.core import HomeAssistant
+from datetime import date, datetime
+
+from homeassistant.components.sensor import RestoreSensor
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.event import async_track_time_change
+from homeassistant.util import dt as dt_util
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import KwbConfigEntry
-from .const import REG_ALARMS_PENDING
+from .const import CONF_BOILER_TYPE, DEFAULT_BOILER_TYPE, REG_ALARMS_PENDING
 from .coordinator import KwbCoordinator
 from .entity import KwbEntity, device_info
+
+REG_FUEL_CONSUMPTION = 8233
 
 # unit -> (native unit, device class, state class)
 UNITS: dict[str, tuple[str | None, SensorDeviceClass | None, SensorStateClass | None]] = {
@@ -67,6 +74,10 @@ async def async_setup_entry(
     ]
     entities.append(KwbActiveAlarmsSensor(runtime.coordinator, entry))
     entities.append(KwbSoftwareVersionSensor(runtime.coordinator, entry))
+    boiler = entry.options.get(CONF_BOILER_TYPE, DEFAULT_BOILER_TYPE)
+    if REG_FUEL_CONSUMPTION in runtime.coordinator.regmap.boiler_types[boiler]["registers"]:
+        entities.append(KwbFuelPeriodSensor(runtime.coordinator, entry, "today"))
+        entities.append(KwbFuelPeriodSensor(runtime.coordinator, entry, "yesterday"))
     async_add_entities(entities)
 
 
@@ -157,3 +168,93 @@ class KwbSoftwareVersionSensor(CoordinatorEntity[KwbCoordinator], SensorEntity):
     @property
     def native_value(self) -> str | None:
         return self.coordinator.software_version
+
+
+class KwbFuelPeriodSensor(CoordinatorEntity[KwbCoordinator], RestoreSensor):
+    """Pellet consumption today / yesterday, derived from the total counter."""
+
+    _attr_has_entity_name = True
+    _attr_native_unit_of_measurement = UnitOfMass.KILOGRAMS
+    _attr_device_class = SensorDeviceClass.WEIGHT
+    _attr_icon = "mdi:fire"
+
+    def __init__(self, coordinator: KwbCoordinator, entry: KwbConfigEntry, period: str) -> None:
+        super().__init__(coordinator)
+        base = entry.unique_id or entry.entry_id
+        self.period = period
+        self._attr_translation_key = f"fuel_consumption_{period}"
+        self._attr_unique_id = f"{base}_fuel_consumption_{period}"
+        self._attr_device_info = device_info(entry, coordinator, None)
+        if period == "today":
+            self._attr_state_class = SensorStateClass.TOTAL_INCREASING
+        self._day: date | None = None
+        self._day_start: int | None = None  # counter at midnight
+        self._yesterday: int | None = None
+
+    async def async_added_to_hass(self) -> None:
+        self.coordinator.register([REG_FUEL_CONSUMPTION])
+        await super().async_added_to_hass()
+        last = await self.async_get_last_state()
+        if last is not None:
+            attrs = last.attributes
+            try:
+                self._day = date.fromisoformat(attrs["day"]) if attrs.get("day") else None
+                self._day_start = attrs.get("counter_at_day_start")
+                self._yesterday = attrs.get("yesterday_kg")
+            except (TypeError, ValueError):
+                pass
+        self.async_on_remove(
+            async_track_time_change(self.hass, self._midnight, hour=0, minute=0, second=5)
+        )
+        self._roll()
+
+    async def async_will_remove_from_hass(self) -> None:
+        self.coordinator.unregister([REG_FUEL_CONSUMPTION])
+        await super().async_will_remove_from_hass()
+
+    def _total(self) -> int | None:
+        data = self.coordinator.data
+        return None if data is None else data.values.get(REG_FUEL_CONSUMPTION)
+
+    def _roll(self) -> None:
+        """Start a new day if the date changed."""
+        total = self._total()
+        today = dt_util.now().date()
+        if total is None:
+            return
+        if self._day is None or self._day_start is None:
+            self._day, self._day_start = today, total
+            return
+        if self._day != today:
+            if (today - self._day).days == 1:
+                self._yesterday = max(total - self._day_start, 0)
+            else:
+                self._yesterday = None  # HA was off for longer
+            self._day, self._day_start = today, total
+
+    @callback
+    def _midnight(self, _now: datetime) -> None:
+        self._roll()
+        self.async_write_ha_state()
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        self._roll()
+        super()._handle_coordinator_update()
+
+    @property
+    def native_value(self) -> int | None:
+        if self.period == "yesterday":
+            return self._yesterday
+        total = self._total()
+        if total is None or self._day_start is None:
+            return None
+        return max(total - self._day_start, 0)
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        return {
+            "day": self._day.isoformat() if self._day else None,
+            "counter_at_day_start": self._day_start,
+            "yesterday_kg": self._yesterday,
+        }

@@ -55,7 +55,7 @@ async def test_setup_and_states(hass, kwb):
     assert hass.states.get(_eid(hass, "sensor", 9275)).state == "71266.0"
     assert hass.states.get(_eid(hass, "sensor", 8233)).state == "28220"
     # writable at user level -> number / select / switch
-    assert hass.states.get(_eid(hass, "number", 24927)).state == "4050"  # 50 kg steps
+    assert hass.states.get(_eid(hass, "number", 24927)).state == "4061"
     assert hass.states.get(_eid(hass, "number", 24624)).state == "24.0"
     assert hass.states.get(_eid(hass, "select", 24589)).state == "comfort"
     assert hass.states.get(_eid(hass, "switch", 24576)).state == "on"
@@ -150,3 +150,31 @@ async def test_connection_lost(hass, kwb):
     await coordinator.async_refresh()
     await hass.async_block_till_done()
     assert hass.states.get(_eid(hass, "sensor", 8260)).state == STATE_UNAVAILABLE
+
+
+async def test_fuel_today_yesterday(hass, kwb):
+    from datetime import timedelta
+
+    from homeassistant.util import dt as dt_util
+
+    entry = _entry(kwb)
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    today_id = "sensor.kwb_easyfire_fuel_consumption_today"
+    yesterday_id = "sensor.kwb_easyfire_fuel_consumption_yesterday"
+    assert hass.states.get(today_id).state == "0"
+    coordinator = entry.runtime_data.coordinator
+    kwb.set(8233, 28250)
+    await coordinator.async_refresh()
+    await hass.async_block_till_done()
+    assert hass.states.get(today_id).state == "30"
+    # pretend the day started yesterday -> next update rolls over
+    for ent in hass.data["entity_components"]["sensor"].entities:
+        if getattr(ent, "period", None):
+            ent._day = dt_util.now().date() - timedelta(days=1)
+    kwb.set(8233, 28262)
+    await coordinator.async_refresh()
+    await hass.async_block_till_done()
+    assert hass.states.get(yesterday_id).state == "42"
+    assert hass.states.get(today_id).state == "0"

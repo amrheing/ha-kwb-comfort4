@@ -20,7 +20,6 @@ UNITS = {
 STEPS = {
     "hk_raum_temperatur_soll_tag": 0.5,
     "hk_raum_temperatur_soll_nacht": 0.5,
-    "ksm_restmenge_brennstofflager": 50,
 }
 
 
@@ -54,12 +53,7 @@ class KwbNumber(KwbEntity, NumberEntity):
 
     @property
     def native_value(self) -> float | None:
-        value = self.scaled
-        step = STEPS.get(self.reg.key)
-        if value is not None and step and step >= 1:
-            # show in the same granularity as it can be set
-            return int(round(value / step) * step)
-        return value
+        return self.scaled
 
     async def async_set_native_value(self, value: float) -> None:
         raw = round(value / self.reg.scale)

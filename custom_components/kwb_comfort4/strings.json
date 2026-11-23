@@ -1051,6 +1051,12 @@
       },
       "zk_i_temperatur": {
         "name": "Temperature"
+      },
+      "fuel_consumption_today": {
+        "name": "Fuel consumption today"
+      },
+      "fuel_consumption_yesterday": {
+        "name": "Fuel consumption yesterday"
       }
     },
     "switch": {

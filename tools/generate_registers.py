@@ -465,6 +465,8 @@ def main(en_path: str, de_path: str) -> None:
             "sensor": {
                 "active_alarms": {"name": "Active alarms"},
                 "software_version": {"name": "Software version"},
+                "fuel_consumption_today": {"name": "Fuel consumption today"},
+                "fuel_consumption_yesterday": {"name": "Fuel consumption yesterday"},
             },
             "binary_sensor": {"connection": {"name": "Modbus connection"}},
         }
@@ -472,6 +474,8 @@ def main(en_path: str, de_path: str) -> None:
             "sensor": {
                 "active_alarms": {"name": "Aktive Alarme"},
                 "software_version": {"name": "Softwareversion"},
+                "fuel_consumption_today": {"name": "Brennstoffverbrauch heute"},
+                "fuel_consumption_yesterday": {"name": "Brennstoffverbrauch gestern"},
             },
             "binary_sensor": {"connection": {"name": "Modbus-Verbindung"}},
         }
