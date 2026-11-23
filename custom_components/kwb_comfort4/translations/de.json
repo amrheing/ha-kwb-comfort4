@@ -1,0 +1,1092 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "KWB Comfort 4",
+        "description": "Modbus muss an der Regelung aktiviert sein (Expertenebene » Zusatzfunktionen » Modbus). Die Regelung erlaubt höchstens drei gleichzeitige Modbus-Verbindungen.",
+        "data": {
+          "host": "Host (IP-Adresse der Regelung)",
+          "port": "Port",
+          "unit_id": "Modbus-Slave-Adresse"
+        },
+        "data_description": {
+          "host": "Feste IP-Adresse der KWB Comfort 4 (Zusatzfunktionen » Ethernet).",
+          "unit_id": "Laut KWB 1 oder 255."
+        }
+      },
+      "settings": {
+        "title": "Anlage",
+        "description": "Regelung gefunden, Software {version} (Registerliste {list_version}). Erkannte Module sind vorausgewählt, bitte prüfen.",
+        "data": {
+          "boiler_type": "Kesseltyp",
+          "access_level": "Modbus-Berechtigung (Ebene an der Regelung)",
+          "heating_circuit": "Heizkreise",
+          "buffer": "Pufferspeicher",
+          "dhw": "Brauchwasserspeicher",
+          "solar": "Solar",
+          "circulation": "Zirkulation",
+          "secondary_heat": "Zweitwärmequellen",
+          "heat_meter": "Wärmemengenzähler",
+          "cascade": "Kesselfolgeschaltung"
+        },
+        "data_description": {
+          "access_level": "Muss zur Einstellung „Ebene“ unter Zusatzfunktionen » Modbus passen. Bei „Experte“ werden mehr Werte schreibbar."
+        }
+      },
+      "reconfigure": {
+        "title": "Verbindung ändern",
+        "data": {
+          "host": "Host (IP-Adresse der Regelung)",
+          "port": "Port",
+          "unit_id": "Modbus-Slave-Adresse"
+        },
+        "data_description": {
+          "host": "Feste IP-Adresse der KWB Comfort 4 (Zusatzfunktionen » Ethernet).",
+          "unit_id": "Laut KWB 1 oder 255."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Keine Verbindung oder keine KWB-Regelung gefunden. IP, Port und Modbus-Freigabe prüfen.",
+      "unknown": "Unerwarteter Fehler"
+    },
+    "abort": {
+      "already_configured": "Diese Regelung ist bereits eingerichtet.",
+      "reconfigure_successful": "Verbindung aktualisiert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Anlage",
+        "data": {
+          "boiler_type": "Kesseltyp",
+          "access_level": "Modbus-Berechtigung (Ebene an der Regelung)",
+          "heating_circuit": "Heizkreise",
+          "buffer": "Pufferspeicher",
+          "dhw": "Brauchwasserspeicher",
+          "solar": "Solar",
+          "circulation": "Zirkulation",
+          "secondary_heat": "Zweitwärmequellen",
+          "heat_meter": "Wärmemengenzähler",
+          "cascade": "Kesselfolgeschaltung"
+        },
+        "data_description": {
+          "access_level": "Muss zur Einstellung „Ebene“ unter Zusatzfunktionen » Modbus passen. Bei „Experte“ werden mehr Werte schreibbar."
+        }
+      },
+      "advanced": {
+        "title": "Abfrage",
+        "data": {
+          "scan_interval": "Abfrageintervall",
+          "request_delay": "Pause zwischen Anfragen",
+          "lifetick": "Externe Vorgabe über Modbus (Lifetick senden)"
+        },
+        "data_description": {
+          "request_delay": "KWB empfiehlt 0,5 bis 1 s.",
+          "lifetick": "Nur einschalten, wenn Home Assistant Kesselleistung oder Temperatur vorgeben soll (Expertenebene, „Leistungs-/Temperaturvorgabe“ an der Regelung aktiv). Dann werden auch die Modbus-Vorgabewerte als Entitäten angelegt."
+        }
+      }
+    }
+  },
+  "selector": {
+    "boiler_type": {
+      "options": {
+        "easyfire": "KWB Easyfire",
+        "multifire": "KWB Multifire",
+        "pelletfire_plus": "KWB Pelletfire Plus",
+        "combifire": "KWB Combifire",
+        "cf2": "KWB CF 2",
+        "cf1": "KWB CF 1",
+        "cf1_5": "KWB CF 1.5",
+        "wmm": "Wärmemanagementmodul (WMM autonom)"
+      }
+    },
+    "access_level": {
+      "options": {
+        "user": "Benutzer",
+        "expert": "Experte"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "ak_anlage_ein": {
+        "name": "Kessel Ein/Aus"
+      },
+      "boi_anforderung": {
+        "name": "Anforderung"
+      },
+      "boi_o_pumpe": {
+        "name": "Ladepumpe"
+      },
+      "boi_schnellladung": {
+        "name": "Brauchwasser 1x erhitzen"
+      },
+      "cf2_i_tuer_geschlossen": {
+        "name": "Füllraumtüre"
+      },
+      "cf2_o_zuendung_heizung_sh": {
+        "name": "Zündung Heizung"
+      },
+      "connection": {
+        "name": "Modbus-Verbindung"
+      },
+      "fs_o_motor_foerdersystem_1": {
+        "name": "Antrieb Fördersystem"
+      },
+      "hk_modbus_anforderung": {
+        "name": "Modbus Anforderung"
+      },
+      "hk_o_pumpe": {
+        "name": "Pumpe"
+      },
+      "kfk_i_stoerung": {
+        "name": "Störung Kessel {index}"
+      },
+      "kfk_o_anforderung": {
+        "name": "Anforderung Kessel {index}"
+      },
+      "kfs_anlage_ein": {
+        "name": "Kesselfolgeschaltung Ein/Aus"
+      },
+      "kfs_o_anforderung_spitzenlastkessel": {
+        "name": "Anf. Spitzenlastkessel"
+      },
+      "kfs_o_stoerung_dauer": {
+        "name": "Störkontakt Dauer"
+      },
+      "ksm_anlage_keine_stoerung": {
+        "name": "Anlage OK"
+      },
+      "ksm_anlage_stoerung": {
+        "name": "Kessel Störung"
+      },
+      "ksm_do_kesselpumpe": {
+        "name": "Kesselpumpe"
+      },
+      "ksm_do_pelletssauger": {
+        "name": "Saugturbine"
+      },
+      "ksm_i_extern1": {
+        "name": "Extern 1"
+      },
+      "ksm_i_extern2": {
+        "name": "Extern 2"
+      },
+      "ksm_i_extern3": {
+        "name": "Extern 3"
+      },
+      "ksm_modbus_kesselanforderung": {
+        "name": "Modbus Kesselanforderung"
+      },
+      "ksm_modbus_ueberhitzung": {
+        "name": "Modbus Überhitzung"
+      },
+      "ksm_modbus_waermeabnahme_max": {
+        "name": "Modbus Wärmeabnahme Max"
+      },
+      "ksm_o_multifunktionsausgang_1": {
+        "name": "Multifunktionsausgang 1 (125)"
+      },
+      "ksm_o_multifunktionsausgang_2": {
+        "name": "Multifunktionsausgang 2 (127)"
+      },
+      "ksm_o_multifunktionsausgang_3": {
+        "name": "Multifunktionsausgang 3 (124)"
+      },
+      "ksm_o_multifunktionsausgang_4": {
+        "name": "Multifunktionsausgang 4 (126)"
+      },
+      "mf2_i_aschebehaelter_90_prz": {
+        "name": "Asche 90% voll"
+      },
+      "puf_anforderung": {
+        "name": "Anforderung"
+      },
+      "puf_o_pumpe": {
+        "name": "Pumpe"
+      },
+      "sol_o_pumpe_1": {
+        "name": "Pumpe 1"
+      },
+      "sol_o_pumpe_2": {
+        "name": "Pumpe 2"
+      },
+      "sol_o_umschaltventil": {
+        "name": "Umschaltventil"
+      },
+      "zirk_o_pumpe": {
+        "name": "Pumpe"
+      },
+      "zk_o_anforderung": {
+        "name": "Anforderung"
+      },
+      "zk_o_pumpe": {
+        "name": "Kesselpumpe"
+      }
+    },
+    "button": {
+      "system_alarme_beheben_von_extern": {
+        "name": "Alarme beheben"
+      }
+    },
+    "number": {
+      "boi_temperatur_grenzen_max": {
+        "name": "Temperatur Min/Max (max)"
+      },
+      "boi_temperatur_grenzen_min": {
+        "name": "Temperatur Min/Max (min)"
+      },
+      "cf2_kesseltemp_soll_1": {
+        "name": "Kesseltemperatur Soll"
+      },
+      "ef2_kesseltempsoll1": {
+        "name": "Solltemperatur 1"
+      },
+      "ef2_kesseltempsoll2": {
+        "name": "Solltemperatur 2"
+      },
+      "hk_modbus_temperatur": {
+        "name": "Modbus Vorlauftemperatur Soll"
+      },
+      "hk_raum_temperatur_soll_nacht": {
+        "name": "Absenktemperatur"
+      },
+      "hk_raum_temperatur_soll_tag": {
+        "name": "Komforttemperatur"
+      },
+      "kfs_puffer_solltemperatur_sommer": {
+        "name": "Puffersolltemperatur Sommer"
+      },
+      "kfs_puffer_solltemperatur_winter": {
+        "name": "Puffersolltemperatur Winter"
+      },
+      "ksm_modbus_kesseltemp_vorgabe": {
+        "name": "Modbus Kesseltemperatur"
+      },
+      "ksm_modbus_leistung_vorgabe": {
+        "name": "Modbus Kesselleistung"
+      },
+      "ksm_modbus_puffertemperatur_oben": {
+        "name": "Modbus Puffertemperatur oben für Restwärmenutzung"
+      },
+      "ksm_modbus_puffertemperatur_unten": {
+        "name": "Modbus Puffertemperatur unten für Restwärmenutzung"
+      },
+      "ksm_restmenge_brennstofflager": {
+        "name": "Restmenge Brennstofflager"
+      },
+      "ksm_ruecklauftempmin": {
+        "name": "Rücklauftemperatur Minimum"
+      },
+      "mf2_kesseltempsoll1": {
+        "name": "Solltemperatur 1"
+      },
+      "mf2_kesseltempsoll2": {
+        "name": "Solltemperatur 2"
+      },
+      "puf_brauchwassertemp_min": {
+        "name": "Brauchwassertemp. min."
+      },
+      "puf_temperatur_grenzen_max": {
+        "name": "Temperatur Min/Max (max)"
+      },
+      "puf_temperatur_grenzen_min": {
+        "name": "Temperatur Min/Max (min)"
+      }
+    },
+    "select": {
+      "ak_externe_vorgabe": {
+        "name": "Externe Vorgabe",
+        "state": {
+          "off": "Aus",
+          "temp": "Temperatur",
+          "power": "Leistung",
+          "modbus": "Modbus",
+          "modbus_4": "Modbus"
+        }
+      },
+      "ak_kesselprogramm": {
+        "name": "Kesselprogramm",
+        "state": {
+          "request": "Anforderung",
+          "time_program": "Zeitprogramm",
+          "continuous_operation": "Dauerbetrieb",
+          "modbus_temperature": "Modbus Temperatur",
+          "modbus_output_temperature": "Modbus Leistung+Temperatur"
+        }
+      },
+      "boi_programm": {
+        "name": "Programm wählen",
+        "state": {
+          "time": "Zeit",
+          "temp": "Temp.",
+          "off": "Aus"
+        }
+      },
+      "cf2_automatische_zuendung_sh": {
+        "name": "Automatische Zündung Funktion",
+        "state": {
+          "off": "Aus",
+          "selection": "Auswahl",
+          "request": "Anforderung",
+          "immediately": "Sofort"
+        }
+      },
+      "hk_programm": {
+        "name": "Programm wählen",
+        "state": {
+          "automatic": "Automatik",
+          "frost_protection": "Frostschutz",
+          "off": "Aus",
+          "comfort": "Komfort",
+          "reduct": "Absenk"
+        }
+      },
+      "kfs_active_profile": {
+        "name": "Aktives Profil",
+        "state": {
+          "winter": "Winter",
+          "summer": "Sommer"
+        }
+      },
+      "puf_programm": {
+        "name": "Programm wählen",
+        "state": {
+          "time": "Zeit",
+          "temperature": "Temperatur",
+          "off": "Aus",
+          "time_3": "Zeit+",
+          "summer": "Sommer"
+        }
+      },
+      "zirk_programm": {
+        "name": "Programm wählen",
+        "state": {
+          "off": "Aus",
+          "automatic": "Automatik",
+          "continuous_operation": "Dauerbetrieb"
+        }
+      }
+    },
+    "sensor": {
+      "active_alarms": {
+        "name": "Aktive Alarme"
+      },
+      "ak_anforderung_bl_ursache": {
+        "name": "Brennerleistung bestimmt durch",
+        "state": {
+          "normal_operation": "Normalbetrieb",
+          "measuring": "Einmessen",
+          "chimney_sweep": "Kaminkehrer",
+          "external": "Extern",
+          "external_overheated": "Extern überhitzt",
+          "clear_stoker": "Stoker leeren",
+          "min_for_cleaning": "Min. für Reinigung",
+          "stoker_overheating": "Stoker Überhitzung",
+          "cycle_operation": "Zyklusbetrieb",
+          "buffer_management": "Puffermanagement",
+          "bumgmt_overheated": "PuMgmt. überhitzt",
+          "modbus": "Modbus"
+        }
+      },
+      "ak_externe_brennerleistung": {
+        "name": "Brennerleistung extern"
+      },
+      "ak_externe_kessel_solltemperatur": {
+        "name": "Kesseltemp. Soll Extern"
+      },
+      "ak_externe_vorgabe": {
+        "name": "Externe Vorgabe",
+        "state": {
+          "off": "Aus",
+          "temp": "Temperatur",
+          "power": "Leistung",
+          "modbus": "Modbus",
+          "modbus_4": "Modbus"
+        }
+      },
+      "ak_kesselprogramm": {
+        "name": "Kesselprogramm",
+        "state": {
+          "request": "Anforderung",
+          "time_program": "Zeitprogramm",
+          "continuous_operation": "Dauerbetrieb",
+          "modbus_temperature": "Modbus Temperatur",
+          "modbus_output_temperature": "Modbus Leistung+Temperatur"
+        }
+      },
+      "ak_kesselstatus_anzeige_ak": {
+        "name": "Status Pelletmodul",
+        "state": {
+          "off": "Aus",
+          "measuring_mode": "Messbetrieb",
+          "operation_cleaning": "Betrieb (Reinigung)",
+          "measuring": "Einmessen",
+          "operation": "Betrieb",
+          "afterrun": "Nachlauf",
+          "restart": "Neustart",
+          "fault_afterrun": "Störung Nachlauf",
+          "fault_off": "Störung Aus",
+          "maintenance": "Wartung",
+          "ready_ignstart": "Bereit (-Zuendanf)",
+          "ignite_start_suction": "Zünden Start Saugzug",
+          "ignition_fill_fuel_supply": "Zünden FS Füllen",
+          "ignition_feeding_1": "Zünden Einschieben 1",
+          "ignition_feeding_3": "Zünden Einschieben 3",
+          "ignition_heating": "Zünden Heizen",
+          "heating_complete_ignition": "Heizen Durchzünden",
+          "ignition_feeding_2": "Zünden Einschieben 2",
+          "ignition_wait": "Zünden Warten",
+          "complete_ignition": "Durchzünden",
+          "1_ib_operation": "1. IB Betrieb",
+          "ready_ext1": "Bereit (-Ext1)",
+          "ready_secondboiler": "Bereit (-Zweitkessel)",
+          "ready_cs": "Bereit (-FS)",
+          "ready_cleaning": "Bereit (-Reinigung)",
+          "ready_stop": "Bereit (+Stop)",
+          "ready_ext3": "Bereit (-Ext3)",
+          "ready_lambda_probe": "Bereit (-Lambdasonde)",
+          "ready_requ": "Bereit (-Anf)",
+          "ready_wait_time": "Bereit (+Wartezeit)",
+          "ready_requ_32": "Bereit (+Anf)",
+          "empty_out_operation": "Betrieb Leerschieben",
+          "off_35": "Aus",
+          "heating_up": "Anheizen",
+          "wait_ignition_requ": "Warten Zündanf.",
+          "wait_ignition_rel": "Warten Zündfreig.",
+          "start_ignition": "Start Zündung",
+          "ignition": "Zünden",
+          "heating": "Heizen",
+          "fire_maintenance": "Feuerhaltung",
+          "fire_off": "Feuer aus",
+          "fault_fire_out": "Störung Feuer aus",
+          "door_open": "Tür offen",
+          "overheating": "Überhitzung",
+          "fault_fire_maintenance": "Störung Feuerhaltung",
+          "sh_off_pm_released": "Sh aus, PM freigegeben",
+          "start_pellet_module": "Start Pelletmodul",
+          "pellet_module_locked": "Pelletmodul Gesperrt",
+          "maintenance_52": "Wartung"
+        }
+      },
+      "ak_pl_geblaesestufe": {
+        "name": "Primärgebläse"
+      },
+      "boi_i_ist_temperatur": {
+        "name": "Temperatur Ist"
+      },
+      "boi_i_ist_temperatur_2": {
+        "name": "Temperatur 2"
+      },
+      "boi_programm": {
+        "name": "Programm wählen",
+        "state": {
+          "time": "Zeit",
+          "temp": "Temp.",
+          "off": "Aus"
+        }
+      },
+      "boi_soll_temperatur": {
+        "name": "Temperatur Soll"
+      },
+      "boi_status": {
+        "name": "Status",
+        "state": {
+          "fault": "Störung",
+          "off": "Aus",
+          "legionella_protection": "Legionellenschutz",
+          "holiday": "Urlaub",
+          "one_time_charge": "Einmalladung",
+          "outside_of_charging_time": "Außerhalb der Ladezeit",
+          "charge_to_target_temp": "Laden bis Solltemp.",
+          "temp_sufficient": "Temp. ausreichend",
+          "blocking_protection": "Blockierschutz",
+          "waiting_pump_release": "Warten Pumpenfreigabe",
+          "boiler_overheating": "Kessel Überhitzung",
+          "shs_overheating": "ZWQ Überhitzung",
+          "max_heat_reduction": "max. Wärmeabnahme",
+          "afterrun": "Nachlauf",
+          "afterrun_waiting_release": "Nachlauf (Warten Freig.)",
+          "licence_invalid": "Lizenz ungültig"
+        }
+      },
+      "boi_temperatur_grenzen_max": {
+        "name": "Temperatur Min/Max (max)"
+      },
+      "boi_temperatur_grenzen_min": {
+        "name": "Temperatur Min/Max (min)"
+      },
+      "cf2_automatische_zuendung_sh": {
+        "name": "Automatische Zündung Funktion",
+        "state": {
+          "off": "Aus",
+          "selection": "Auswahl",
+          "request": "Anforderung",
+          "immediately": "Sofort"
+        }
+      },
+      "cf2_betriebsmodus": {
+        "name": "Betriebsmodus",
+        "state": {
+          "none": "Kein",
+          "log_wood": "Stückholz",
+          "pellets": "Pellets",
+          "log_wood_pm_afterrun": "Stückholz (PM Nachlauf)",
+          "relay_test": "Relaistest"
+        }
+      },
+      "cf2_i_pl_klappe_ist_promille": {
+        "name": "Primärluftklappe"
+      },
+      "cf2_i_sl_klappe_ist_promille": {
+        "name": "Sekundärluftklappe"
+      },
+      "cf2_kesselstatus_anzeige_sh": {
+        "name": "Status Stückholz",
+        "state": {
+          "off": "Aus",
+          "measuring_mode": "Messbetrieb",
+          "operation_cleaning": "Betrieb (Reinigung)",
+          "measuring": "Einmessen",
+          "operation": "Betrieb",
+          "afterrun": "Nachlauf",
+          "restart": "Neustart",
+          "fault_afterrun": "Störung Nachlauf",
+          "fault_off": "Störung Aus",
+          "maintenance": "Wartung",
+          "ready_ignstart": "Bereit (-Zuendanf)",
+          "ignite_start_suction": "Zünden Start Saugzug",
+          "ignition_fill_fuel_supply": "Zünden FS Füllen",
+          "ignition_feeding_1": "Zünden Einschieben 1",
+          "ignition_feeding_3": "Zünden Einschieben 3",
+          "ignition_heating": "Zünden Heizen",
+          "heating_complete_ignition": "Heizen Durchzünden",
+          "ignition_feeding_2": "Zünden Einschieben 2",
+          "ignition_wait": "Zünden Warten",
+          "complete_ignition": "Durchzünden",
+          "1_ib_operation": "1. IB Betrieb",
+          "ready_ext1": "Bereit (-Ext1)",
+          "ready_secondboiler": "Bereit (-Zweitkessel)",
+          "ready_cs": "Bereit (-FS)",
+          "ready_cleaning": "Bereit (-Reinigung)",
+          "ready_stop": "Bereit (+Stop)",
+          "ready_ext3": "Bereit (-Ext3)",
+          "ready_lambda_probe": "Bereit (-Lambdasonde)",
+          "ready_requ": "Bereit (-Anf)",
+          "ready_wait_time": "Bereit (+Wartezeit)",
+          "ready_requ_32": "Bereit (+Anf)",
+          "empty_out_operation": "Betrieb Leerschieben",
+          "off_35": "Aus",
+          "heating_up": "Anheizen",
+          "wait_ignition_requ": "Warten Zündanf.",
+          "wait_ignition_rel": "Warten Zündfreig.",
+          "start_ignition": "Start Zündung",
+          "ignition": "Zünden",
+          "heating": "Heizen",
+          "fire_maintenance": "Feuerhaltung",
+          "fire_off": "Feuer aus",
+          "fault_fire_out": "Störung Feuer aus",
+          "door_open": "Tür offen",
+          "overheating": "Überhitzung",
+          "fault_fire_maintenance": "Störung Feuerhaltung",
+          "sh_off_pm_released": "Sh aus, PM freigegeben",
+          "start_pellet_module": "Start Pelletmodul",
+          "pellet_module_locked": "Pelletmodul Gesperrt",
+          "maintenance_52": "Wartung"
+        }
+      },
+      "cf2_kesseltemp_soll_1": {
+        "name": "Kesseltemperatur Soll"
+      },
+      "cf2_max_befuellgrad_anzeige": {
+        "name": "Maximaler Befüllgrad",
+        "state": {
+          "none": "Keine",
+          "one_third": "Ein Drittel",
+          "two_thirds": "Zwei Drittel",
+          "full": "Voll"
+        }
+      },
+      "cf2_pm_betriebsminuten_summe": {
+        "name": "Volllaststunden Pelletmodul"
+      },
+      "ef2_brennstofffaktor": {
+        "name": "Brennstofffaktor"
+      },
+      "ef2_kesseltempsoll1": {
+        "name": "Solltemperatur 1"
+      },
+      "ef2_kesseltempsoll2": {
+        "name": "Solltemperatur 2"
+      },
+      "fs_pelletsverbrauch": {
+        "name": "Brennstoffverbrauch"
+      },
+      "hk_i_aussen_temperatur": {
+        "name": "Außentemperatur"
+      },
+      "hk_i_raum_temperatur": {
+        "name": "Raumtemperatur Ist"
+      },
+      "hk_i_vorlauf_temperatur": {
+        "name": "Vorlauftemperatur Ist"
+      },
+      "hk_modbus_temperatur": {
+        "name": "Modbus Vorlauftemperatur Soll"
+      },
+      "hk_programm": {
+        "name": "Programm wählen",
+        "state": {
+          "automatic": "Automatik",
+          "frost_protection": "Frostschutz",
+          "off": "Aus",
+          "comfort": "Komfort",
+          "reduct": "Absenk"
+        }
+      },
+      "hk_raum_temperatur_soll": {
+        "name": "Raumtemperatur Soll"
+      },
+      "hk_raum_temperatur_soll_nacht": {
+        "name": "Absenktemperatur"
+      },
+      "hk_raum_temperatur_soll_tag": {
+        "name": "Komforttemperatur"
+      },
+      "hk_status": {
+        "name": "Status",
+        "state": {
+          "reduct": "Absenk",
+          "comfort": "Komfort",
+          "frost_protection": "Frostschutz",
+          "holiday": "Urlaub",
+          "off": "Aus",
+          "screed": "Estrich",
+          "max_heat_reduction": "Max. Wärmeabnahme",
+          "max_heat_reduction_7": "Max. Wärmeabnahme",
+          "modbus": "Modbus"
+        }
+      },
+      "hk_vorlauf_temperatur_soll": {
+        "name": "Vorlauftemperatur Soll"
+      },
+      "kfs_active_profile": {
+        "name": "Aktives Profil",
+        "state": {
+          "winter": "Winter",
+          "summer": "Sommer"
+        }
+      },
+      "kfs_anzahl_angeforderte_kessel": {
+        "name": "Anlagen angefordert"
+      },
+      "kfs_anzahl_kessel": {
+        "name": "Anlagen"
+      },
+      "kfs_i_aussen_temperatur_mittelwert": {
+        "name": "Außentemperatur gemittelt"
+      },
+      "kfs_mittlere_durchladetemperatur": {
+        "name": "Mittlere Durchladetemp."
+      },
+      "kfs_mittlere_puffertemperatur": {
+        "name": "Mittlere Puffertemp."
+      },
+      "kfs_netz_ruecklauf": {
+        "name": "Netzrücklauf"
+      },
+      "kfs_netz_vorlauf": {
+        "name": "Netzvorlauf"
+      },
+      "kfs_puffer_durchladegrad": {
+        "name": "Pufferdurchladegrad"
+      },
+      "kfs_puffer_fuellgrad": {
+        "name": "Pufferfüllgrad"
+      },
+      "kfs_puffer_solltemperatur_anzeige": {
+        "name": "Puffersolltemperatur"
+      },
+      "kfs_puffer_solltemperatur_sommer": {
+        "name": "Puffersolltemperatur Sommer"
+      },
+      "kfs_puffer_solltemperatur_winter": {
+        "name": "Puffersolltemperatur Winter"
+      },
+      "kfs_puffer_temperatur_1": {
+        "name": "Puffer Temperatur 1"
+      },
+      "kfs_puffer_temperatur_2": {
+        "name": "Puffer Temperatur 2"
+      },
+      "kfs_puffer_temperatur_3": {
+        "name": "Puffer Temperatur 3"
+      },
+      "kfs_puffer_temperatur_4": {
+        "name": "Puffer Temperatur 4"
+      },
+      "kfs_puffer_temperatur_5": {
+        "name": "Puffer Temperatur 5"
+      },
+      "ksm_ai_feuerraum_unterdruck": {
+        "name": "Unterdruck Ist"
+      },
+      "ksm_aschefuellstand": {
+        "name": "Füllstand Aschebehälter"
+      },
+      "ksm_betriebsminuten_summe": {
+        "name": "Volllaststunden"
+      },
+      "ksm_brennerleistung": {
+        "name": "Kesselleistung"
+      },
+      "ksm_i_drehzahl_saugzug": {
+        "name": "Drehzahl Saugzug"
+      },
+      "ksm_i_flammtemp_ist": {
+        "name": "Flammtemperatur Ist"
+      },
+      "ksm_i_kesseltemp_ist": {
+        "name": "Kesseltemperatur Ist"
+      },
+      "ksm_i_rauchgastemp_ist": {
+        "name": "Abgastemperatur"
+      },
+      "ksm_i_ruecklauftemp_ist": {
+        "name": "Rücklauftemperatur Ist"
+      },
+      "ksm_kesselpumpe_steuerstufe": {
+        "name": "Kesselpumpe %"
+      },
+      "ksm_kesselstatus_anzeige": {
+        "name": "Kesselstatus",
+        "state": {
+          "off": "Aus",
+          "measuring_mode": "Messbetrieb",
+          "operation_cleaning": "Betrieb (Reinigung)",
+          "measuring": "Einmessen",
+          "operation": "Betrieb",
+          "afterrun": "Nachlauf",
+          "restart": "Neustart",
+          "fault_afterrun": "Störung Nachlauf",
+          "fault_off": "Störung Aus",
+          "maintenance": "Wartung",
+          "ready_ignstart": "Bereit (-Zuendanf)",
+          "ignite_start_suction": "Zünden Start Saugzug",
+          "ignition_fill_fuel_supply": "Zünden FS Füllen",
+          "ignition_feeding_1": "Zünden Einschieben 1",
+          "ignition_feeding_3": "Zünden Einschieben 3",
+          "ignition_heating": "Zünden Heizen",
+          "heating_complete_ignition": "Heizen Durchzünden",
+          "ignition_feeding_2": "Zünden Einschieben 2",
+          "ignition_wait": "Zünden Warten",
+          "complete_ignition": "Durchzünden",
+          "1_ib_operation": "1. IB Betrieb",
+          "ready_ext1": "Bereit (-Ext1)",
+          "ready_secondboiler": "Bereit (-Zweitkessel)",
+          "ready_cs": "Bereit (-FS)",
+          "ready_cleaning": "Bereit (-Reinigung)",
+          "ready_stop": "Bereit (+Stop)",
+          "ready_ext3": "Bereit (-Ext3)",
+          "ready_lambda_probe": "Bereit (-Lambdasonde)",
+          "ready_requ": "Bereit (-Anf)",
+          "ready_wait_time": "Bereit (+Wartezeit)",
+          "ready_requ_32": "Bereit (+Anf)",
+          "empty_out_operation": "Betrieb Leerschieben",
+          "off_35": "Aus",
+          "heating_up": "Anheizen",
+          "wait_ignition_requ": "Warten Zündanf.",
+          "wait_ignition_rel": "Warten Zündfreig.",
+          "start_ignition": "Start Zündung",
+          "ignition": "Zünden",
+          "heating": "Heizen",
+          "fire_maintenance": "Feuerhaltung",
+          "fire_off": "Feuer aus",
+          "fault_fire_out": "Störung Feuer aus",
+          "door_open": "Tür offen",
+          "overheating": "Überhitzung",
+          "fault_fire_maintenance": "Störung Feuerhaltung",
+          "sh_off_pm_released": "Sh aus, PM freigegeben",
+          "start_pellet_module": "Start Pelletmodul",
+          "pellet_module_locked": "Pelletmodul Gesperrt",
+          "maintenance_52": "Wartung"
+        }
+      },
+      "ksm_kesseltemp_soll": {
+        "name": "Kesseltemperatur Soll"
+      },
+      "ksm_modbus_kesseltemp_vorgabe": {
+        "name": "Modbus Kesseltemperatur"
+      },
+      "ksm_modbus_leistung_vorgabe": {
+        "name": "Modbus Kesselleistung"
+      },
+      "ksm_modbus_puffertemperatur_oben": {
+        "name": "Modbus Puffertemperatur oben für Restwärmenutzung"
+      },
+      "ksm_modbus_puffertemperatur_unten": {
+        "name": "Modbus Puffertemperatur unten für Restwärmenutzung"
+      },
+      "ksm_o2ist": {
+        "name": "Sauerstoff Ist"
+      },
+      "ksm_restmenge_brennstofflager": {
+        "name": "Restmenge Brennstofflager"
+      },
+      "ksm_ruecklauftempmin": {
+        "name": "Rücklauftemperatur Minimum"
+      },
+      "ksm_saugzugstufe": {
+        "name": "Saugzugstufe"
+      },
+      "ksm_serviceintervallreststunden": {
+        "name": "Nächste Wartung in"
+      },
+      "ksm_verbraucher_anforderung": {
+        "name": "Verbraucher Anforderung",
+        "state": {
+          "off": "Aus",
+          "heat_circ": "Heizkreis",
+          "dhwc": "BWS",
+          "buffer": "Puffer"
+        }
+      },
+      "mbus_energie": {
+        "name": "Energie"
+      },
+      "mbus_leistung": {
+        "name": "Leistung"
+      },
+      "mbus_ruecklauftemp": {
+        "name": "Rücklauf"
+      },
+      "mbus_vol_akt": {
+        "name": "Volumen akt."
+      },
+      "mbus_vol_ges": {
+        "name": "Volumen ges."
+      },
+      "mbus_vorlauftemp": {
+        "name": "Vorlauf"
+      },
+      "mf2_ai_fuellstand_zwischenbehaelter": {
+        "name": "Ultraschallsensor ist"
+      },
+      "mf2_brennstofffaktor": {
+        "name": "Brennstofffaktor"
+      },
+      "mf2_glutbettniveau": {
+        "name": "Glutbett"
+      },
+      "mf2_i_ausbrandtemp": {
+        "name": "Ausbrandtemperatur"
+      },
+      "mf2_kesseltempsoll1": {
+        "name": "Solltemperatur 1"
+      },
+      "mf2_kesseltempsoll2": {
+        "name": "Solltemperatur 2"
+      },
+      "mf2_luftverschiebung_gesamt": {
+        "name": "Luftverschiebung"
+      },
+      "mf2_slgeblaesestufe": {
+        "name": "Sekundärgebläse"
+      },
+      "mf2_zwischenbehaelter_fuellstand_prz": {
+        "name": "Zwischenbehälter Füllstand"
+      },
+      "puf_brauchwassertemp_min": {
+        "name": "Brauchwassertemp. min."
+      },
+      "puf_i_ist_temperatur_1": {
+        "name": "Temperatur 1"
+      },
+      "puf_i_ist_temperatur_2": {
+        "name": "Temperatur 2"
+      },
+      "puf_i_ist_temperatur_3": {
+        "name": "Temperatur 3"
+      },
+      "puf_i_ist_temperatur_4": {
+        "name": "Temperatur 4"
+      },
+      "puf_i_ist_temperatur_5": {
+        "name": "Temperatur 5"
+      },
+      "puf_o_umschaltventil": {
+        "name": "Umschaltventil",
+        "state": {
+          "not_available": "Nicht vorhanden",
+          "top": "Oben",
+          "bottom": "Unten"
+        }
+      },
+      "puf_programm": {
+        "name": "Programm wählen",
+        "state": {
+          "time": "Zeit",
+          "temperature": "Temperatur",
+          "off": "Aus",
+          "time_3": "Zeit+",
+          "summer": "Sommer"
+        }
+      },
+      "puf_temperatur_grenzen_max": {
+        "name": "Temperatur Min/Max (max)"
+      },
+      "puf_temperatur_grenzen_min": {
+        "name": "Temperatur Min/Max (min)"
+      },
+      "software_version": {
+        "name": "Softwareversion"
+      },
+      "sol_i_ist_temperatur_speicher_1": {
+        "name": "Temperatur Speicher 1"
+      },
+      "sol_i_ist_temperatur_speicher_2": {
+        "name": "Temperatur Speicher 2"
+      },
+      "sol_i_kollektor_durchfluss": {
+        "name": "Durchfluss"
+      },
+      "sol_i_kollektor_ruecklauf_temperatur": {
+        "name": "Kollektor Rücklauftemperatur"
+      },
+      "sol_i_kollektor_temperatur": {
+        "name": "Kollektortemperatur"
+      },
+      "sol_i_vorlauf_temperatur": {
+        "name": "Kollektor Vorlauftemperatur"
+      },
+      "sol_pumpe_1_steuerstufe": {
+        "name": "Pumpe 1"
+      },
+      "sol_pumpe_2_steuerstufe": {
+        "name": "Pumpe 2"
+      },
+      "sol_status": {
+        "name": "Status",
+        "state": {
+          "off": "Aus",
+          "manual_mode": "Handbetrieb",
+          "charge_storage_tank_1": "Laden Speicher 1",
+          "charge_storage_tank_2": "Laden Speicher 2",
+          "fault": "Störung",
+          "solar_protection": "Solarschutz",
+          "back_cooling_1": "Rückkühlung 1",
+          "back_cooling_2": "Rückkühlung 2"
+        }
+      },
+      "sol_status_ursache": {
+        "name": "Statusursache",
+        "state": {
+          "program_off": "Programm Aus",
+          "manual_mode": "Handbetrieb",
+          "collector_tem_sufficient": "Kollektortemperatur ausreichend",
+          "tem_diff_coll_stor_tank_1_ins": "Temperaturdifferenz Kollektor / Speicher 1 zu gering",
+          "max_tem_storage_tank_1_exc": "Maximaltemperatur Speicher 1 überschritten",
+          "max_tem_storage_tank_2_ex": "Maximaltemperatur Speicher 2 überschritten",
+          "absolute_priority_collector_temperature_too_low": "Absoluter Vorrang (Kollektortemperatur zu gering)",
+          "blocking_protection": "Blockierschutz",
+          "collector_tem_too_high": "Kollektortemperatur zu hoch",
+          "alarm_active_in_solar_circuit": "Alarm im Solarkreis aktiv",
+          "max_tem_stor_tank_1_2_exce": "Maximaltemperatur Speicher 1+2 überschritten",
+          "coll_min_temp_undershot": "Kollektorminimaltemperatur unterschritten",
+          "licence_invalid": "Lizenz ungültig",
+          "interval_function": "Intervallfunktion",
+          "back_cooling": "Rückkühlung"
+        }
+      },
+      "sol_waermeleistung": {
+        "name": "Wärmeleistung"
+      },
+      "sol_waermemenge_gesamt": {
+        "name": "Wärmemenge gesamt"
+      },
+      "sol_waermemenge_tag": {
+        "name": "Wärmemenge Tag"
+      },
+      "system_alarme_offen": {
+        "name": "Anzahl offene Alarme"
+      },
+      "system_alarme_total": {
+        "name": "Anzahl Alarme"
+      },
+      "system_i_aussen_temperatur": {
+        "name": "Außentemperatur Istwert"
+      },
+      "system_sw_revision": {
+        "name": "Revision"
+      },
+      "system_sw_version_major": {
+        "name": "Software (major)"
+      },
+      "system_sw_version_minor": {
+        "name": "Software (minor)"
+      },
+      "system_sw_version_patch": {
+        "name": "Software (patch)"
+      },
+      "zirk_i_temperatur": {
+        "name": "Temperatur"
+      },
+      "zirk_programm": {
+        "name": "Programm wählen",
+        "state": {
+          "off": "Aus",
+          "automatic": "Automatik",
+          "continuous_operation": "Dauerbetrieb"
+        }
+      },
+      "zk_i_temperatur": {
+        "name": "Temperatur"
+      }
+    },
+    "switch": {
+      "ak_anlage_ein": {
+        "name": "Kessel Ein/Aus"
+      },
+      "boi_schnellladung": {
+        "name": "Brauchwasser 1x erhitzen"
+      },
+      "hk_modbus_anforderung": {
+        "name": "Modbus Anforderung"
+      },
+      "kfs_anlage_ein": {
+        "name": "Kesselfolgeschaltung Ein/Aus"
+      },
+      "ksm_modbus_kesselanforderung": {
+        "name": "Modbus Kesselanforderung"
+      }
+    }
+  },
+  "device": {
+    "heating_circuit": {
+      "name": "Heizkreis {index}"
+    },
+    "buffer": {
+      "name": "Pufferspeicher {index}"
+    },
+    "dhw": {
+      "name": "Brauchwasserspeicher {index}"
+    },
+    "secondary_heat": {
+      "name": "Zweitwärmequelle {index}"
+    },
+    "circulation": {
+      "name": "Zirkulation {index}"
+    },
+    "solar": {
+      "name": "Solar {index}"
+    },
+    "cascade": {
+      "name": "Kesselfolgeschaltung"
+    },
+    "heat_meter": {
+      "name": "Wärmemengenzähler {index}"
+    }
+  }
+}

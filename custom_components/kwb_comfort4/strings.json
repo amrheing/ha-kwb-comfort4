@@ -1,0 +1,1092 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "KWB Comfort 4",
+        "description": "Modbus must be enabled on the controller (expert level » Add-ons » Modbus). The controller accepts at most three Modbus connections at the same time.",
+        "data": {
+          "host": "Host (IP address of the controller)",
+          "port": "Port",
+          "unit_id": "Modbus unit id"
+        },
+        "data_description": {
+          "host": "Fixed IP address of the KWB Comfort 4 (Add-ons » Ethernet settings).",
+          "unit_id": "1 or 255 according to KWB."
+        }
+      },
+      "settings": {
+        "title": "Installation",
+        "description": "Controller found, software {version} (register list {list_version}). Detected modules are preselected, please check.",
+        "data": {
+          "boiler_type": "Boiler type",
+          "access_level": "Modbus level set on the controller",
+          "heating_circuit": "Heating circuits",
+          "buffer": "Buffer storage tanks",
+          "dhw": "Domestic hot water tanks",
+          "solar": "Solar circuits",
+          "circulation": "Circulation",
+          "secondary_heat": "Secondary heat sources",
+          "heat_meter": "Heat meters",
+          "cascade": "Boiler cascade"
+        },
+        "data_description": {
+          "access_level": "Must match the “Level” setting under Add-ons » Modbus. “Expert” makes more values writable."
+        }
+      },
+      "reconfigure": {
+        "title": "Change connection",
+        "data": {
+          "host": "Host (IP address of the controller)",
+          "port": "Port",
+          "unit_id": "Modbus unit id"
+        },
+        "data_description": {
+          "host": "Fixed IP address of the KWB Comfort 4 (Add-ons » Ethernet settings).",
+          "unit_id": "1 or 255 according to KWB."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect or no KWB controller found. Check IP, port and that Modbus is enabled.",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This controller is already configured.",
+      "reconfigure_successful": "Connection updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Installation",
+        "data": {
+          "boiler_type": "Boiler type",
+          "access_level": "Modbus level set on the controller",
+          "heating_circuit": "Heating circuits",
+          "buffer": "Buffer storage tanks",
+          "dhw": "Domestic hot water tanks",
+          "solar": "Solar circuits",
+          "circulation": "Circulation",
+          "secondary_heat": "Secondary heat sources",
+          "heat_meter": "Heat meters",
+          "cascade": "Boiler cascade"
+        },
+        "data_description": {
+          "access_level": "Must match the “Level” setting under Add-ons » Modbus. “Expert” makes more values writable."
+        }
+      },
+      "advanced": {
+        "title": "Polling",
+        "data": {
+          "scan_interval": "Scan interval",
+          "request_delay": "Delay between requests",
+          "lifetick": "External specification via Modbus (send lifetick)"
+        },
+        "data_description": {
+          "request_delay": "KWB recommends 0.5 to 1 s.",
+          "lifetick": "Only enable if Home Assistant should specify boiler output or temperature (expert level, “Output/temperature specification” enabled on the controller). This also adds the Modbus specification entities."
+        }
+      }
+    }
+  },
+  "selector": {
+    "boiler_type": {
+      "options": {
+        "easyfire": "KWB Easyfire",
+        "multifire": "KWB Multifire",
+        "pelletfire_plus": "KWB Pelletfire Plus",
+        "combifire": "KWB Combifire",
+        "cf2": "KWB CF 2",
+        "cf1": "KWB CF 1",
+        "cf1_5": "KWB CF 1.5",
+        "wmm": "Heating management module (WMM autonomous)"
+      }
+    },
+    "access_level": {
+      "options": {
+        "user": "User",
+        "expert": "Expert"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "ak_anlage_ein": {
+        "name": "Boiler on/off"
+      },
+      "boi_anforderung": {
+        "name": "Request"
+      },
+      "boi_o_pumpe": {
+        "name": "Charging pump"
+      },
+      "boi_schnellladung": {
+        "name": "Heat DHW 1x"
+      },
+      "cf2_i_tuer_geschlossen": {
+        "name": "Fill room door"
+      },
+      "cf2_o_zuendung_heizung_sh": {
+        "name": "Ignition heating"
+      },
+      "connection": {
+        "name": "Modbus connection"
+      },
+      "fs_o_motor_foerdersystem_1": {
+        "name": "Drive, conveyor system"
+      },
+      "hk_modbus_anforderung": {
+        "name": "Modbus request"
+      },
+      "hk_o_pumpe": {
+        "name": "Pump"
+      },
+      "kfk_i_stoerung": {
+        "name": "Fault boiler {index}"
+      },
+      "kfk_o_anforderung": {
+        "name": "Request boiler {index}"
+      },
+      "kfs_anlage_ein": {
+        "name": "Boiler cascade on/off"
+      },
+      "kfs_o_anforderung_spitzenlastkessel": {
+        "name": "Requ. peak load boiler"
+      },
+      "kfs_o_stoerung_dauer": {
+        "name": "Malfunction contact duration"
+      },
+      "ksm_anlage_keine_stoerung": {
+        "name": "System OK"
+      },
+      "ksm_anlage_stoerung": {
+        "name": "Boiler fault"
+      },
+      "ksm_do_kesselpumpe": {
+        "name": "Boiler pump"
+      },
+      "ksm_do_pelletssauger": {
+        "name": "Suction turbine"
+      },
+      "ksm_i_extern1": {
+        "name": "External 1"
+      },
+      "ksm_i_extern2": {
+        "name": "External 2"
+      },
+      "ksm_i_extern3": {
+        "name": "External 3"
+      },
+      "ksm_modbus_kesselanforderung": {
+        "name": "Modbus boiler request"
+      },
+      "ksm_modbus_ueberhitzung": {
+        "name": "Modbus overheating"
+      },
+      "ksm_modbus_waermeabnahme_max": {
+        "name": "Modbus heat consumption Max"
+      },
+      "ksm_o_multifunktionsausgang_1": {
+        "name": "Multi-function output 1 (125)"
+      },
+      "ksm_o_multifunktionsausgang_2": {
+        "name": "Multi-function output 2 (127)"
+      },
+      "ksm_o_multifunktionsausgang_3": {
+        "name": "Multi-function output 3 (124)"
+      },
+      "ksm_o_multifunktionsausgang_4": {
+        "name": "Multi-function output 4 (126)"
+      },
+      "mf2_i_aschebehaelter_90_prz": {
+        "name": "Ash 90% filled"
+      },
+      "puf_anforderung": {
+        "name": "Request"
+      },
+      "puf_o_pumpe": {
+        "name": "Pump"
+      },
+      "sol_o_pumpe_1": {
+        "name": "Pump 1"
+      },
+      "sol_o_pumpe_2": {
+        "name": "Pump 2"
+      },
+      "sol_o_umschaltventil": {
+        "name": "Switchover valve"
+      },
+      "zirk_o_pumpe": {
+        "name": "Pump"
+      },
+      "zk_o_anforderung": {
+        "name": "Request"
+      },
+      "zk_o_pumpe": {
+        "name": "Boiler pump"
+      }
+    },
+    "button": {
+      "system_alarme_beheben_von_extern": {
+        "name": "Rectify alarms"
+      }
+    },
+    "number": {
+      "boi_temperatur_grenzen_max": {
+        "name": "Temp. min/max (max)"
+      },
+      "boi_temperatur_grenzen_min": {
+        "name": "Temp. min/max (min)"
+      },
+      "cf2_kesseltemp_soll_1": {
+        "name": "Boiler temperature, setpoint"
+      },
+      "ef2_kesseltempsoll1": {
+        "name": "Setpoint temperature 1"
+      },
+      "ef2_kesseltempsoll2": {
+        "name": "Setpoint temperature 2"
+      },
+      "hk_modbus_temperatur": {
+        "name": "Modbus Forward flow temp. Setpoint"
+      },
+      "hk_raum_temperatur_soll_nacht": {
+        "name": "Reduction temperature"
+      },
+      "hk_raum_temperatur_soll_tag": {
+        "name": "Comfort temperature"
+      },
+      "kfs_puffer_solltemperatur_sommer": {
+        "name": "Buffer setpoint temperature Summer"
+      },
+      "kfs_puffer_solltemperatur_winter": {
+        "name": "Buffer setpoint temperature Winter"
+      },
+      "ksm_modbus_kesseltemp_vorgabe": {
+        "name": "Modbus boiler temperature"
+      },
+      "ksm_modbus_leistung_vorgabe": {
+        "name": "Modbus boiler output"
+      },
+      "ksm_modbus_puffertemperatur_oben": {
+        "name": "Modbus buffer temperature top for residual heat use"
+      },
+      "ksm_modbus_puffertemperatur_unten": {
+        "name": "Modbus buffer temperature bottom for residual heat use"
+      },
+      "ksm_restmenge_brennstofflager": {
+        "name": "Residual amount fuel storage"
+      },
+      "ksm_ruecklauftempmin": {
+        "name": "Return flow temperature, minimum"
+      },
+      "mf2_kesseltempsoll1": {
+        "name": "Setpoint temperature 1"
+      },
+      "mf2_kesseltempsoll2": {
+        "name": "Setpoint temperature 2"
+      },
+      "puf_brauchwassertemp_min": {
+        "name": "DHW temp. min."
+      },
+      "puf_temperatur_grenzen_max": {
+        "name": "Temp. min/max (max)"
+      },
+      "puf_temperatur_grenzen_min": {
+        "name": "Temp. min/max (min)"
+      }
+    },
+    "select": {
+      "ak_externe_vorgabe": {
+        "name": "External specification",
+        "state": {
+          "off": "Off",
+          "temp": "Temp.",
+          "power": "Power",
+          "modbus": "Modbus",
+          "modbus_4": "Modbus"
+        }
+      },
+      "ak_kesselprogramm": {
+        "name": "Boiler program",
+        "state": {
+          "request": "request",
+          "time_program": "Time program",
+          "continuous_operation": "Continuous operation",
+          "modbus_temperature": "Modbus temperature",
+          "modbus_output_temperature": "Modbus output+temperature"
+        }
+      },
+      "boi_programm": {
+        "name": "Select program",
+        "state": {
+          "time": "Time",
+          "temp": "Temp.",
+          "off": "Off"
+        }
+      },
+      "cf2_automatische_zuendung_sh": {
+        "name": "Automatic ignition Function",
+        "state": {
+          "off": "Off",
+          "selection": "Selection",
+          "request": "Request",
+          "immediately": "immediately"
+        }
+      },
+      "hk_programm": {
+        "name": "Select program",
+        "state": {
+          "automatic": "Automatic",
+          "frost_protection": "Frost protection",
+          "off": "Off",
+          "comfort": "Comfort",
+          "reduct": "Reduct"
+        }
+      },
+      "kfs_active_profile": {
+        "name": "Active profile",
+        "state": {
+          "winter": "Winter",
+          "summer": "Summer"
+        }
+      },
+      "puf_programm": {
+        "name": "Select program",
+        "state": {
+          "time": "Time",
+          "temperature": "Temperature",
+          "off": "Off",
+          "time_3": "Time+",
+          "summer": "Summer"
+        }
+      },
+      "zirk_programm": {
+        "name": "Select program",
+        "state": {
+          "off": "Off",
+          "automatic": "Automatic",
+          "continuous_operation": "Continuous operation"
+        }
+      }
+    },
+    "sensor": {
+      "active_alarms": {
+        "name": "Active alarms"
+      },
+      "ak_anforderung_bl_ursache": {
+        "name": "Burner output determined by",
+        "state": {
+          "normal_operation": "Normal operation",
+          "measuring": "Measuring",
+          "chimney_sweep": "Chimney sweep",
+          "external": "External",
+          "external_overheated": "External overheated",
+          "clear_stoker": "Clear stoker",
+          "min_for_cleaning": "Min. for cleaning",
+          "stoker_overheating": "Stoker, overheating",
+          "cycle_operation": "Cycle operation",
+          "buffer_management": "Buffer management",
+          "bumgmt_overheated": "BuMgmt overheated",
+          "modbus": "Modbus"
+        }
+      },
+      "ak_externe_brennerleistung": {
+        "name": "burner output external"
+      },
+      "ak_externe_kessel_solltemperatur": {
+        "name": "Boiler temp. Setpoint extern."
+      },
+      "ak_externe_vorgabe": {
+        "name": "External specification",
+        "state": {
+          "off": "Off",
+          "temp": "Temp.",
+          "power": "Power",
+          "modbus": "Modbus",
+          "modbus_4": "Modbus"
+        }
+      },
+      "ak_kesselprogramm": {
+        "name": "Boiler program",
+        "state": {
+          "request": "request",
+          "time_program": "Time program",
+          "continuous_operation": "Continuous operation",
+          "modbus_temperature": "Modbus temperature",
+          "modbus_output_temperature": "Modbus output+temperature"
+        }
+      },
+      "ak_kesselstatus_anzeige_ak": {
+        "name": "Status Pellets module",
+        "state": {
+          "off": "Off",
+          "measuring_mode": "Measuring mode",
+          "operation_cleaning": "Operation (Cleaning):",
+          "measuring": "Measuring",
+          "operation": "operation",
+          "afterrun": "Afterrun",
+          "restart": "Restart",
+          "fault_afterrun": "Fault afterrun",
+          "fault_off": "Fault Off",
+          "maintenance": "Maintenance",
+          "ready_ignstart": "Ready (-IgnStart)",
+          "ignite_start_suction": "Ignite start suction",
+          "ignition_fill_fuel_supply": "Ignition fill fuel supply",
+          "ignition_feeding_1": "Ignition feeding 1",
+          "ignition_feeding_3": "Ignition feeding 3",
+          "ignition_heating": "Ignition heating",
+          "heating_complete_ignition": "Heating - complete ignition",
+          "ignition_feeding_2": "Ignition feeding 2",
+          "ignition_wait": "Ignition wait",
+          "complete_ignition": "Complete ignition",
+          "1_ib_operation": "1. IB operation",
+          "ready_ext1": "Ready (-Ext1)",
+          "ready_secondboiler": "Ready (-SecondBoiler)",
+          "ready_cs": "Ready (-CS)",
+          "ready_cleaning": "Ready (-Cleaning)",
+          "ready_stop": "Ready (+Stop)",
+          "ready_ext3": "Ready (-Ext3)",
+          "ready_lambda_probe": "Ready (-lambda probe)",
+          "ready_requ": "Ready (-Requ)",
+          "ready_wait_time": "Ready (+Wait time)",
+          "ready_requ_32": "Ready (+Requ)",
+          "empty_out_operation": "Empty out operation",
+          "off_35": "Off",
+          "heating_up": "Heating-up",
+          "wait_ignition_requ": "Wait ignition requ.",
+          "wait_ignition_rel": "Wait ignition rel.",
+          "start_ignition": "Start ignition",
+          "ignition": "Ignition",
+          "heating": "Heating",
+          "fire_maintenance": "Fire maintenance",
+          "fire_off": "Fire off",
+          "fault_fire_out": "Fault fire out",
+          "door_open": "Door open",
+          "overheating": "Overheating",
+          "fault_fire_maintenance": "Fault, fire maintenance",
+          "sh_off_pm_released": "Sh off, PM released",
+          "start_pellet_module": "Start pellet module",
+          "pellet_module_locked": "Pellet module locked",
+          "maintenance_52": "Maintenance"
+        }
+      },
+      "ak_pl_geblaesestufe": {
+        "name": "Primary fan"
+      },
+      "boi_i_ist_temperatur": {
+        "name": "Temperature actual"
+      },
+      "boi_i_ist_temperatur_2": {
+        "name": "Temperature 2"
+      },
+      "boi_programm": {
+        "name": "Select program",
+        "state": {
+          "time": "Time",
+          "temp": "Temp.",
+          "off": "Off"
+        }
+      },
+      "boi_soll_temperatur": {
+        "name": "Temperature setpoint"
+      },
+      "boi_status": {
+        "name": "Status",
+        "state": {
+          "fault": "Fault",
+          "off": "Off",
+          "legionella_protection": "Legionella protection",
+          "holiday": "Holiday",
+          "one_time_charge": "One-time charge",
+          "outside_of_charging_time": "Outside of charging time",
+          "charge_to_target_temp": "Charge to target temp.",
+          "temp_sufficient": "Temp. sufficient",
+          "blocking_protection": "Blocking protection",
+          "waiting_pump_release": "Waiting, pump release",
+          "boiler_overheating": "Boiler overheating",
+          "shs_overheating": "SHS, overheating",
+          "max_heat_reduction": "max. heat reduction",
+          "afterrun": "Afterrun",
+          "afterrun_waiting_release": "Afterrun (waiting release)",
+          "licence_invalid": "Licence invalid"
+        }
+      },
+      "boi_temperatur_grenzen_max": {
+        "name": "Temp. min/max (max)"
+      },
+      "boi_temperatur_grenzen_min": {
+        "name": "Temp. min/max (min)"
+      },
+      "cf2_automatische_zuendung_sh": {
+        "name": "Automatic ignition Function",
+        "state": {
+          "off": "Off",
+          "selection": "Selection",
+          "request": "Request",
+          "immediately": "immediately"
+        }
+      },
+      "cf2_betriebsmodus": {
+        "name": "Operating mode",
+        "state": {
+          "none": "None",
+          "log_wood": "Log wood",
+          "pellets": "Pellets",
+          "log_wood_pm_afterrun": "Log wood (PM afterrun)",
+          "relay_test": "Relay test"
+        }
+      },
+      "cf2_i_pl_klappe_ist_promille": {
+        "name": "Primary air shutter"
+      },
+      "cf2_i_sl_klappe_ist_promille": {
+        "name": "Secondary air shutter"
+      },
+      "cf2_kesselstatus_anzeige_sh": {
+        "name": "Status Log wood",
+        "state": {
+          "off": "Off",
+          "measuring_mode": "Measuring mode",
+          "operation_cleaning": "Operation (Cleaning):",
+          "measuring": "Measuring",
+          "operation": "operation",
+          "afterrun": "Afterrun",
+          "restart": "Restart",
+          "fault_afterrun": "Fault afterrun",
+          "fault_off": "Fault Off",
+          "maintenance": "Maintenance",
+          "ready_ignstart": "Ready (-IgnStart)",
+          "ignite_start_suction": "Ignite start suction",
+          "ignition_fill_fuel_supply": "Ignition fill fuel supply",
+          "ignition_feeding_1": "Ignition feeding 1",
+          "ignition_feeding_3": "Ignition feeding 3",
+          "ignition_heating": "Ignition heating",
+          "heating_complete_ignition": "Heating - complete ignition",
+          "ignition_feeding_2": "Ignition feeding 2",
+          "ignition_wait": "Ignition wait",
+          "complete_ignition": "Complete ignition",
+          "1_ib_operation": "1. IB operation",
+          "ready_ext1": "Ready (-Ext1)",
+          "ready_secondboiler": "Ready (-SecondBoiler)",
+          "ready_cs": "Ready (-CS)",
+          "ready_cleaning": "Ready (-Cleaning)",
+          "ready_stop": "Ready (+Stop)",
+          "ready_ext3": "Ready (-Ext3)",
+          "ready_lambda_probe": "Ready (-lambda probe)",
+          "ready_requ": "Ready (-Requ)",
+          "ready_wait_time": "Ready (+Wait time)",
+          "ready_requ_32": "Ready (+Requ)",
+          "empty_out_operation": "Empty out operation",
+          "off_35": "Off",
+          "heating_up": "Heating-up",
+          "wait_ignition_requ": "Wait ignition requ.",
+          "wait_ignition_rel": "Wait ignition rel.",
+          "start_ignition": "Start ignition",
+          "ignition": "Ignition",
+          "heating": "Heating",
+          "fire_maintenance": "Fire maintenance",
+          "fire_off": "Fire off",
+          "fault_fire_out": "Fault fire out",
+          "door_open": "Door open",
+          "overheating": "Overheating",
+          "fault_fire_maintenance": "Fault, fire maintenance",
+          "sh_off_pm_released": "Sh off, PM released",
+          "start_pellet_module": "Start pellet module",
+          "pellet_module_locked": "Pellet module locked",
+          "maintenance_52": "Maintenance"
+        }
+      },
+      "cf2_kesseltemp_soll_1": {
+        "name": "Boiler temperature, setpoint"
+      },
+      "cf2_max_befuellgrad_anzeige": {
+        "name": "Maximum fill level",
+        "state": {
+          "none": "None",
+          "one_third": "One third",
+          "two_thirds": "Two thirds",
+          "full": "Full"
+        }
+      },
+      "cf2_pm_betriebsminuten_summe": {
+        "name": "Full load hours pellet module"
+      },
+      "ef2_brennstofffaktor": {
+        "name": "Fuel factor"
+      },
+      "ef2_kesseltempsoll1": {
+        "name": "Setpoint temperature 1"
+      },
+      "ef2_kesseltempsoll2": {
+        "name": "Setpoint temperature 2"
+      },
+      "fs_pelletsverbrauch": {
+        "name": "Fuel consumption"
+      },
+      "hk_i_aussen_temperatur": {
+        "name": "Actual outside temperature"
+      },
+      "hk_i_raum_temperatur": {
+        "name": "Room temp., actual"
+      },
+      "hk_i_vorlauf_temperatur": {
+        "name": "Forward flow temp., act."
+      },
+      "hk_modbus_temperatur": {
+        "name": "Modbus Forward flow temp. Setpoint"
+      },
+      "hk_programm": {
+        "name": "Select program",
+        "state": {
+          "automatic": "Automatic",
+          "frost_protection": "Frost protection",
+          "off": "Off",
+          "comfort": "Comfort",
+          "reduct": "Reduct"
+        }
+      },
+      "hk_raum_temperatur_soll": {
+        "name": "Room temp., setpoint"
+      },
+      "hk_raum_temperatur_soll_nacht": {
+        "name": "Reduction temperature"
+      },
+      "hk_raum_temperatur_soll_tag": {
+        "name": "Comfort temperature"
+      },
+      "hk_status": {
+        "name": "Status",
+        "state": {
+          "reduct": "Reduct",
+          "comfort": "Comfort",
+          "frost_protection": "Frost protection",
+          "holiday": "Holiday",
+          "off": "Off",
+          "screed": "Screed",
+          "max_heat_reduction": "Max. heat reduction",
+          "max_heat_reduction_7": "Max. heat reduction",
+          "modbus": "Modbus"
+        }
+      },
+      "hk_vorlauf_temperatur_soll": {
+        "name": "Forward flow temp. Setpoint"
+      },
+      "kfs_active_profile": {
+        "name": "Active profile",
+        "state": {
+          "winter": "Winter",
+          "summer": "Summer"
+        }
+      },
+      "kfs_anzahl_angeforderte_kessel": {
+        "name": "Systems requested"
+      },
+      "kfs_anzahl_kessel": {
+        "name": "Systems"
+      },
+      "kfs_i_aussen_temperatur_mittelwert": {
+        "name": "Averaged outside temp."
+      },
+      "kfs_mittlere_durchladetemperatur": {
+        "name": "Average charging temp."
+      },
+      "kfs_mittlere_puffertemperatur": {
+        "name": "Average buffer temp."
+      },
+      "kfs_netz_ruecklauf": {
+        "name": "NetwRetFl"
+      },
+      "kfs_netz_vorlauf": {
+        "name": "NetwForwFl"
+      },
+      "kfs_puffer_durchladegrad": {
+        "name": "Buffer charge-up degree"
+      },
+      "kfs_puffer_fuellgrad": {
+        "name": "Buffer fill level"
+      },
+      "kfs_puffer_solltemperatur_anzeige": {
+        "name": "Buffer setpoint temperature"
+      },
+      "kfs_puffer_solltemperatur_sommer": {
+        "name": "Buffer setpoint temperature Summer"
+      },
+      "kfs_puffer_solltemperatur_winter": {
+        "name": "Buffer setpoint temperature Winter"
+      },
+      "kfs_puffer_temperatur_1": {
+        "name": "Buffer temperature 1"
+      },
+      "kfs_puffer_temperatur_2": {
+        "name": "Buffer temperature 2"
+      },
+      "kfs_puffer_temperatur_3": {
+        "name": "Buffer temperature 3"
+      },
+      "kfs_puffer_temperatur_4": {
+        "name": "Buffer temperature 4"
+      },
+      "kfs_puffer_temperatur_5": {
+        "name": "Buffer temperature 5"
+      },
+      "ksm_ai_feuerraum_unterdruck": {
+        "name": "Negative pressure, actual"
+      },
+      "ksm_aschefuellstand": {
+        "name": "Fill level, ash container"
+      },
+      "ksm_betriebsminuten_summe": {
+        "name": "Full load hours"
+      },
+      "ksm_brennerleistung": {
+        "name": "Boiler output"
+      },
+      "ksm_i_drehzahl_saugzug": {
+        "name": "Induced draught speed"
+      },
+      "ksm_i_flammtemp_ist": {
+        "name": "Flame temp., actual"
+      },
+      "ksm_i_kesseltemp_ist": {
+        "name": "Boiler temp., actual"
+      },
+      "ksm_i_rauchgastemp_ist": {
+        "name": "Exhaust gas temperature"
+      },
+      "ksm_i_ruecklauftemp_ist": {
+        "name": "Return flow temp., actual"
+      },
+      "ksm_kesselpumpe_steuerstufe": {
+        "name": "Boiler pump %"
+      },
+      "ksm_kesselstatus_anzeige": {
+        "name": "Boiler status",
+        "state": {
+          "off": "Off",
+          "measuring_mode": "Measuring mode",
+          "operation_cleaning": "Operation (Cleaning):",
+          "measuring": "Measuring",
+          "operation": "operation",
+          "afterrun": "Afterrun",
+          "restart": "Restart",
+          "fault_afterrun": "Fault afterrun",
+          "fault_off": "Fault Off",
+          "maintenance": "Maintenance",
+          "ready_ignstart": "Ready (-IgnStart)",
+          "ignite_start_suction": "Ignite start suction",
+          "ignition_fill_fuel_supply": "Ignition fill fuel supply",
+          "ignition_feeding_1": "Ignition feeding 1",
+          "ignition_feeding_3": "Ignition feeding 3",
+          "ignition_heating": "Ignition heating",
+          "heating_complete_ignition": "Heating - complete ignition",
+          "ignition_feeding_2": "Ignition feeding 2",
+          "ignition_wait": "Ignition wait",
+          "complete_ignition": "Complete ignition",
+          "1_ib_operation": "1. IB operation",
+          "ready_ext1": "Ready (-Ext1)",
+          "ready_secondboiler": "Ready (-SecondBoiler)",
+          "ready_cs": "Ready (-CS)",
+          "ready_cleaning": "Ready (-Cleaning)",
+          "ready_stop": "Ready (+Stop)",
+          "ready_ext3": "Ready (-Ext3)",
+          "ready_lambda_probe": "Ready (-lambda probe)",
+          "ready_requ": "Ready (-Requ)",
+          "ready_wait_time": "Ready (+Wait time)",
+          "ready_requ_32": "Ready (+Requ)",
+          "empty_out_operation": "Empty out operation",
+          "off_35": "Off",
+          "heating_up": "Heating-up",
+          "wait_ignition_requ": "Wait ignition requ.",
+          "wait_ignition_rel": "Wait ignition rel.",
+          "start_ignition": "Start ignition",
+          "ignition": "Ignition",
+          "heating": "Heating",
+          "fire_maintenance": "Fire maintenance",
+          "fire_off": "Fire off",
+          "fault_fire_out": "Fault fire out",
+          "door_open": "Door open",
+          "overheating": "Overheating",
+          "fault_fire_maintenance": "Fault, fire maintenance",
+          "sh_off_pm_released": "Sh off, PM released",
+          "start_pellet_module": "Start pellet module",
+          "pellet_module_locked": "Pellet module locked",
+          "maintenance_52": "Maintenance"
+        }
+      },
+      "ksm_kesseltemp_soll": {
+        "name": "Boiler temperature, setpoint"
+      },
+      "ksm_modbus_kesseltemp_vorgabe": {
+        "name": "Modbus boiler temperature"
+      },
+      "ksm_modbus_leistung_vorgabe": {
+        "name": "Modbus boiler output"
+      },
+      "ksm_modbus_puffertemperatur_oben": {
+        "name": "Modbus buffer temperature top for residual heat use"
+      },
+      "ksm_modbus_puffertemperatur_unten": {
+        "name": "Modbus buffer temperature bottom for residual heat use"
+      },
+      "ksm_o2ist": {
+        "name": "Oxygen, actual"
+      },
+      "ksm_restmenge_brennstofflager": {
+        "name": "Residual amount fuel storage"
+      },
+      "ksm_ruecklauftempmin": {
+        "name": "Return flow temperature, minimum"
+      },
+      "ksm_saugzugstufe": {
+        "name": "Induced draught phase"
+      },
+      "ksm_serviceintervallreststunden": {
+        "name": "Next maintenance in"
+      },
+      "ksm_verbraucher_anforderung": {
+        "name": "Consumer request",
+        "state": {
+          "off": "Off",
+          "heat_circ": "Heat.circ",
+          "dhwc": "DHWC",
+          "buffer": "Buffer"
+        }
+      },
+      "mbus_energie": {
+        "name": "Energy"
+      },
+      "mbus_leistung": {
+        "name": "Power"
+      },
+      "mbus_ruecklauftemp": {
+        "name": "Return flow"
+      },
+      "mbus_vol_akt": {
+        "name": "Volume act."
+      },
+      "mbus_vol_ges": {
+        "name": "Volume total"
+      },
+      "mbus_vorlauftemp": {
+        "name": "Forward flow"
+      },
+      "mf2_ai_fuellstand_zwischenbehaelter": {
+        "name": "Ultrasound sensor is"
+      },
+      "mf2_brennstofffaktor": {
+        "name": "Fuel factor"
+      },
+      "mf2_glutbettniveau": {
+        "name": "Fuel bed"
+      },
+      "mf2_i_ausbrandtemp": {
+        "name": "Burnout temperature"
+      },
+      "mf2_kesseltempsoll1": {
+        "name": "Setpoint temperature 1"
+      },
+      "mf2_kesseltempsoll2": {
+        "name": "Setpoint temperature 2"
+      },
+      "mf2_luftverschiebung_gesamt": {
+        "name": "Air change"
+      },
+      "mf2_slgeblaesestufe": {
+        "name": "Secondary fan"
+      },
+      "mf2_zwischenbehaelter_fuellstand_prz": {
+        "name": "Hopper fill level"
+      },
+      "puf_brauchwassertemp_min": {
+        "name": "DHW temp. min."
+      },
+      "puf_i_ist_temperatur_1": {
+        "name": "Temperature 1"
+      },
+      "puf_i_ist_temperatur_2": {
+        "name": "Temperature 2"
+      },
+      "puf_i_ist_temperatur_3": {
+        "name": "Temperature 3"
+      },
+      "puf_i_ist_temperatur_4": {
+        "name": "Temperature 4"
+      },
+      "puf_i_ist_temperatur_5": {
+        "name": "Temperature 5"
+      },
+      "puf_o_umschaltventil": {
+        "name": "Reversing valve",
+        "state": {
+          "not_available": "Not available",
+          "top": "Top",
+          "bottom": "Bottom"
+        }
+      },
+      "puf_programm": {
+        "name": "Select program",
+        "state": {
+          "time": "Time",
+          "temperature": "Temperature",
+          "off": "Off",
+          "time_3": "Time+",
+          "summer": "Summer"
+        }
+      },
+      "puf_temperatur_grenzen_max": {
+        "name": "Temp. min/max (max)"
+      },
+      "puf_temperatur_grenzen_min": {
+        "name": "Temp. min/max (min)"
+      },
+      "software_version": {
+        "name": "Software version"
+      },
+      "sol_i_ist_temperatur_speicher_1": {
+        "name": "Temperature storage tank 1"
+      },
+      "sol_i_ist_temperatur_speicher_2": {
+        "name": "Temperature storage tank 2"
+      },
+      "sol_i_kollektor_durchfluss": {
+        "name": "Flow-through"
+      },
+      "sol_i_kollektor_ruecklauf_temperatur": {
+        "name": "Collector return flow temp."
+      },
+      "sol_i_kollektor_temperatur": {
+        "name": "Collector temperature"
+      },
+      "sol_i_vorlauf_temperatur": {
+        "name": "Collector forward flow temp."
+      },
+      "sol_pumpe_1_steuerstufe": {
+        "name": "Pump 1"
+      },
+      "sol_pumpe_2_steuerstufe": {
+        "name": "Pump 2"
+      },
+      "sol_status": {
+        "name": "Status",
+        "state": {
+          "off": "Off",
+          "manual_mode": "Manual mode",
+          "charge_storage_tank_1": "Charge storage tank 1",
+          "charge_storage_tank_2": "Charge storage tank 2",
+          "fault": "Fault",
+          "solar_protection": "Solar protection",
+          "back_cooling_1": "Back cooling 1",
+          "back_cooling_2": "Back cooling 2"
+        }
+      },
+      "sol_status_ursache": {
+        "name": "Stat. R.",
+        "state": {
+          "program_off": "Program Off",
+          "manual_mode": "Manual mode",
+          "collector_tem_sufficient": "Collector tem. sufficient",
+          "tem_diff_coll_stor_tank_1_ins": "Tem.Diff.Coll/stor.tank 1 ins.",
+          "max_tem_storage_tank_1_exc": "Max. tem. storage tank 1 exc.",
+          "max_tem_storage_tank_2_ex": "Max.tem. storage tank 2 ex.",
+          "absolute_priority_collector_temperature_too_low": "Absolute priority (collector temperature too low)",
+          "blocking_protection": "Blocking protection",
+          "collector_tem_too_high": "Collector tem.too high",
+          "alarm_active_in_solar_circuit": "Alarm active in solar circuit",
+          "max_tem_stor_tank_1_2_exce": "Max.tem.Stor.tank 1+2 exce.",
+          "coll_min_temp_undershot": "Coll.min.temp.undershot",
+          "licence_invalid": "Licence invalid",
+          "interval_function": "Interval function",
+          "back_cooling": "Back cooling"
+        }
+      },
+      "sol_waermeleistung": {
+        "name": "Thermal output"
+      },
+      "sol_waermemenge_gesamt": {
+        "name": "Heat amount total"
+      },
+      "sol_waermemenge_tag": {
+        "name": "Heat amount day"
+      },
+      "system_alarme_offen": {
+        "name": "Number of pending alarms"
+      },
+      "system_alarme_total": {
+        "name": "Number of alarms"
+      },
+      "system_i_aussen_temperatur": {
+        "name": "Outside temp. act. value"
+      },
+      "system_sw_revision": {
+        "name": "Revision"
+      },
+      "system_sw_version_major": {
+        "name": "Software (major)"
+      },
+      "system_sw_version_minor": {
+        "name": "Software (minor)"
+      },
+      "system_sw_version_patch": {
+        "name": "Software (patch)"
+      },
+      "zirk_i_temperatur": {
+        "name": "Temperature"
+      },
+      "zirk_programm": {
+        "name": "Select program",
+        "state": {
+          "off": "Off",
+          "automatic": "Automatic",
+          "continuous_operation": "Continuous operation"
+        }
+      },
+      "zk_i_temperatur": {
+        "name": "Temperature"
+      }
+    },
+    "switch": {
+      "ak_anlage_ein": {
+        "name": "Boiler on/off"
+      },
+      "boi_schnellladung": {
+        "name": "Heat DHW 1x"
+      },
+      "hk_modbus_anforderung": {
+        "name": "Modbus request"
+      },
+      "kfs_anlage_ein": {
+        "name": "Boiler cascade on/off"
+      },
+      "ksm_modbus_kesselanforderung": {
+        "name": "Modbus boiler request"
+      }
+    }
+  },
+  "device": {
+    "heating_circuit": {
+      "name": "Heating circuit {index}"
+    },
+    "buffer": {
+      "name": "Buffer storage tank {index}"
+    },
+    "dhw": {
+      "name": "Domestic hot water {index}"
+    },
+    "secondary_heat": {
+      "name": "Secondary heat source {index}"
+    },
+    "circulation": {
+      "name": "Circulation {index}"
+    },
+    "solar": {
+      "name": "Solar {index}"
+    },
+    "cascade": {
+      "name": "Boiler cascade"
+    },
+    "heat_meter": {
+      "name": "Heat meter {index}"
+    }
+  }
+}

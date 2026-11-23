@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+# KWB ModbusInfo workbooks are not redistributed, see tools/generate_registers.py
+tools/*.xlsx
