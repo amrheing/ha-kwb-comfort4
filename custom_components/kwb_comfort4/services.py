@@ -44,6 +44,17 @@ ADD_SCHEMA = vol.Schema(
 DELETE_SCHEMA = vol.Schema(
     {vol.Optional(ATTR_CONFIG_ENTRY_ID): cv.string, vol.Required(ATTR_DATE): cv.date}
 )
+ATTR_PERIOD = "period"
+ATTR_CURRENT = "current_kg"
+ATTR_LAST = "last_kg"
+SET_CONSUMPTION_SCHEMA = vol.Schema(
+    {
+        vol.Optional(ATTR_CONFIG_ENTRY_ID): cv.string,
+        vol.Required(ATTR_PERIOD): vol.In(["day", "month", "year"]),
+        vol.Optional(ATTR_CURRENT): vol.All(vol.Coerce(float), vol.Range(min=0)),
+        vol.Optional(ATTR_LAST): vol.All(vol.Coerce(float), vol.Range(min=0)),
+    }
+)
 LIST_SCHEMA = vol.Schema({vol.Optional(ATTR_CONFIG_ENTRY_ID): cv.string})
 
 
@@ -107,6 +118,20 @@ def async_setup_services(hass: HomeAssistant) -> None:
         }
         return result
 
+    async def set_consumption(call: ServiceCall) -> None:
+        entry = _entry(hass, call)
+        try:
+            await entry.runtime_data.fuel.async_set_consumption(
+                call.data[ATTR_PERIOD], call.data.get(ATTR_CURRENT), call.data.get(ATTR_LAST)
+            )
+        except ValueError as err:
+            raise ServiceValidationError(
+                translation_domain=DOMAIN, translation_key="total_unknown"
+            ) from err
+
+    hass.services.async_register(
+        DOMAIN, "set_consumption", set_consumption, SET_CONSUMPTION_SCHEMA
+    )
     hass.services.async_register(
         DOMAIN, "add_purchase", add_purchase, ADD_SCHEMA, supports_response=SupportsResponse.OPTIONAL
     )

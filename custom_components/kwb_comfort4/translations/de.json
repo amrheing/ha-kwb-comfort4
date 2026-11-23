@@ -115,6 +115,13 @@
         "big": "Höherwertiges Wort zuerst (Standard)",
         "little": "Niederwertiges Wort zuerst (laut KWB-Handbuch)"
       }
+    },
+    "period": {
+      "options": {
+        "day": "Tag",
+        "month": "Monat",
+        "year": "Jahr"
+      }
     }
   },
   "entity": {
@@ -1191,6 +1198,28 @@
           "description": "Nur nötig bei mehreren KWB-Regelungen."
         }
       }
+    },
+    "set_consumption": {
+      "name": "Brennstoffverbrauch setzen",
+      "description": "Korrigiert den Verbrauch des aktuellen und/oder vorigen Tages, Monats oder Jahres, z. B. um Werte eines alten Zählers zu übernehmen.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Regelung",
+          "description": "Nur nötig bei mehreren KWB-Regelungen."
+        },
+        "period": {
+          "name": "Zeitraum",
+          "description": "Tag, Monat oder Jahr."
+        },
+        "current_kg": {
+          "name": "Aktueller Zeitraum",
+          "description": "Bisheriger Verbrauch im aktuellen Zeitraum (heute, dieser Monat, dieses Jahr)."
+        },
+        "last_kg": {
+          "name": "Voriger Zeitraum",
+          "description": "Verbrauch im vorigen Zeitraum (gestern, Vormonat, Vorjahr)."
+        }
+      }
     }
   },
   "exceptions": {
@@ -1205,6 +1234,9 @@
     },
     "stock_unknown": {
       "message": "Die Restmenge ist noch nicht bekannt."
+    },
+    "total_unknown": {
+      "message": "Der Brennstoffzähler wurde noch nicht gelesen."
     }
   }
 }

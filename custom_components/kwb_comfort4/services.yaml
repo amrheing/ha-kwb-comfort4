@@ -55,3 +55,32 @@ list_purchases:
       selector:
         config_entry:
           integration: kwb_comfort4
+set_consumption:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: kwb_comfort4
+    period:
+      required: true
+      selector:
+        select:
+          options:
+            - day
+            - month
+            - year
+          translation_key: period
+    current_kg:
+      selector:
+        number:
+          min: 0
+          max: 1000000
+          unit_of_measurement: kg
+          mode: box
+    last_kg:
+      selector:
+        number:
+          min: 0
+          max: 1000000
+          unit_of_measurement: kg
+          mode: box

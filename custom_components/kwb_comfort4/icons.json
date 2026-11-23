@@ -1,7 +1,16 @@
 {
   "services": {
-    "add_purchase": {"service": "mdi:truck-delivery"},
-    "delete_purchase": {"service": "mdi:delete"},
-    "list_purchases": {"service": "mdi:format-list-bulleted"}
+    "add_purchase": {
+      "service": "mdi:truck-delivery"
+    },
+    "delete_purchase": {
+      "service": "mdi:delete"
+    },
+    "list_purchases": {
+      "service": "mdi:format-list-bulleted"
+    },
+    "set_consumption": {
+      "service": "mdi:counter"
+    }
   }
 }

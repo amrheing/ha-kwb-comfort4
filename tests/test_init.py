@@ -216,3 +216,20 @@ async def test_fuel_periods_price_purchases(hass, kwb):
     )
     assert removed == {"removed": 1}
 
+
+    # take over values from an older meter
+    await hass.services.async_call(
+        "kwb_comfort4", "set_consumption",
+        {"period": "month", "current_kg": 570, "last_kg": 338}, blocking=True,
+    )
+    await hass.services.async_call(
+        "kwb_comfort4", "set_consumption", {"period": "year", "last_kg": 6487}, blocking=True,
+    )
+    await hass.async_block_till_done()
+    assert hass.states.get("sensor.kwb_easyfire_fuel_consumption_this_month").state == "570"
+    assert hass.states.get("sensor.kwb_easyfire_fuel_consumption_last_month").state == "338"
+    assert hass.states.get("sensor.kwb_easyfire_fuel_consumption_last_year").state == "6487"
+    kwb.set(8233, 28272)
+    await coordinator.async_refresh()
+    await hass.async_block_till_done()
+    assert hass.states.get("sensor.kwb_easyfire_fuel_consumption_this_month").state == "580"

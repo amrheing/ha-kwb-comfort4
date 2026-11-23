@@ -98,6 +98,20 @@ data:
 Dazu gibt es `kwb_comfort4.delete_purchase` (Datum) und `kwb_comfort4.list_purchases`
 (liefert Käufe und Preisverlauf zurück).
 
+### Verbrauch von einem alten Zähler übernehmen
+
+Die Verbrauchszähler beginnen bei der Einrichtung bei 0. Mit
+`kwb_comfort4.set_consumption` lassen sich die bisherigen Werte übernehmen, z. B.
+aus einem alten Verbrauchszähler-Helfer:
+
+```yaml
+action: kwb_comfort4.set_consumption
+data:
+  period: month        # day, month oder year
+  current_kg: 570      # bisher in diesem Monat
+  last_kg: 338         # Vormonat
+```
+
 Skript als Eingabemaske fürs Dashboard (in der Skript-Ansicht erscheinen die
 Felder als Formular):
 

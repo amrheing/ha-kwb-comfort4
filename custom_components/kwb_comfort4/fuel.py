@@ -116,6 +116,26 @@ class FuelBook:
         info = self.data.get("periods", {}).get(period)
         return None if info is None else info.get("last")
 
+    async def async_set_consumption(
+        self, period: str, current: float | None = None, last: float | None = None
+    ) -> None:
+        """Correct a period, e.g. to take over values from an older meter."""
+        if self.total is None:
+            raise ValueError("total unknown")
+        today = dt_util.now().date()
+        periods: dict[str, dict[str, Any]] = self.data.setdefault("periods", {})
+        info = periods.setdefault(
+            period, {"key": period_key(period, today), "start": self.total, "last": None, "last_key": None}
+        )
+        if current is not None:
+            info["key"] = period_key(period, today)
+            info["start"] = self.total - round(current)
+        if last is not None:
+            info["last"] = round(last)
+            info["last_key"] = previous_key(period, today)
+        self._save()
+        self._notify()
+
     # ---- price ------------------------------------------------------
     @property
     def price(self) -> float | None:

@@ -115,6 +115,13 @@
         "big": "High word first (default)",
         "little": "Low word first (as in the KWB manual)"
       }
+    },
+    "period": {
+      "options": {
+        "day": "Day",
+        "month": "Month",
+        "year": "Year"
+      }
     }
   },
   "entity": {
@@ -1191,6 +1198,28 @@
           "description": "Only needed with more than one KWB controller."
         }
       }
+    },
+    "set_consumption": {
+      "name": "Set fuel consumption",
+      "description": "Corrects the consumption of the current and/or previous day, month or year, e.g. to take over values from an older meter.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Controller",
+          "description": "Only needed with more than one KWB controller."
+        },
+        "period": {
+          "name": "Period",
+          "description": "Day, month or year."
+        },
+        "current_kg": {
+          "name": "Current period",
+          "description": "Consumption so far in the current period (today, this month, this year)."
+        },
+        "last_kg": {
+          "name": "Previous period",
+          "description": "Consumption of the previous period (yesterday, last month, last year)."
+        }
+      }
     }
   },
   "exceptions": {
@@ -1205,6 +1234,9 @@
     },
     "stock_unknown": {
       "message": "The residual fuel amount is not known yet."
+    },
+    "total_unknown": {
+      "message": "The fuel consumption counter has not been read yet."
     }
   }
 }
